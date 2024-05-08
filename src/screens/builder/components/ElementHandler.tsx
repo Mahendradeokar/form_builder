@@ -13,7 +13,7 @@ interface IIconProps extends ComponentProps<"button"> {
 
 const Icons = ({ Icon, ...rest }: IIconProps) => {
   return (
-    <Button size={"sm"} className="rounded p-2" {...rest}>
+    <Button size={"sm"} type="button" className="rounded p-2" {...rest}>
       <Icon width={"10"} height={10} />
     </Button>
   );
@@ -30,7 +30,6 @@ export default function ElementHandler({
   children,
   onEdit,
   onMove = () => {
-    debugger;
     showMessage();
   },
   onRemove = () => showMessage(),

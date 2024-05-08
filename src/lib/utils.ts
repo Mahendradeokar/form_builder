@@ -25,5 +25,5 @@ export function showMessage({
   title,
   message,
 }: { title: string; message: React.ReactNode } = NOT_FUNCTIONAL_MESSAGE) {
-  toast({ title: title, description: message, variant: "destructive" });
+  toast({ title: title, description: message });
 }
