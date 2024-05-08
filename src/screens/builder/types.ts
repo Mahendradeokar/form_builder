@@ -25,7 +25,6 @@ export type FormValues = {
     value: string | { [optionId: string]: string };
   }[];
 };
-
 export type TFormControllerRenderProps<T extends ControlTypes = ControlTypes> =
   T extends ControlTypes.CheckBox
     ? ControllerRenderProps<

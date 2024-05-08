@@ -12,7 +12,7 @@ export const renderIcon = (type: TControlType) => {
 
 interface IRenderControllers<T extends ControlTypes> {
   type: T;
-  field: TFormControllerRenderProps;
+  field: TFormControllerRenderProps<T> | any;
   config: TFormControls<T>;
 }
 
