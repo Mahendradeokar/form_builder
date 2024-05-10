@@ -11,12 +11,12 @@ import {
 export default function TextArea({
   field,
   config,
-}: IControllerProps<ControlTypes.TextArea>) {
+}: IControllerProps<"TextArea">) {
   return (
     <>
       <FormControl>
         <Textarea
-          placeholder={config.placeholder}
+          placeholder={config.placeholder.value}
           className="resize-none"
           {...field}
         />

@@ -17,6 +17,8 @@ import { FormValues } from "./types";
 import ElementHandler from "./components/ElementHandler";
 import { getActive, setActive } from "@/lib/services/form/controlState";
 import { showMessage } from "@/lib/utils";
+import { shouldAppend } from "./services/controls";
+import { useFormBuilder } from "./hooks/useFormBuilder";
 
 interface Props {}
 
@@ -27,16 +29,17 @@ interface IItem {
 
 export default function Canvas({}: Props) {
   // states
-  const { name, description, controlConfig } = useAppSelector(selectForm);
   const selected = useAppSelector(getActive);
 
   // Hooks
+  const {
+    formFields,
+    arrayFields,
+    append,
+    formMethod: form,
+  } = useFormBuilder<FormValues>();
+  const { name, description, controlConfig } = formFields;
   const dispatch = useAppDispatch();
-  const form = useForm<FormValues>();
-  const { fields, append } = useFieldArray<FormValues>({
-    control: form.control,
-    name: "controls",
-  });
 
   // handlers
 
@@ -68,14 +71,18 @@ export default function Canvas({}: Props) {
 
   // useEffects
   useEffect(() => {
+    const isNew = shouldAppend(arrayFields, controlConfig);
+    if (!isNew) {
+      return;
+    }
     if (controlConfig.length) {
       const control = controlConfig.at(-1);
       if (control) {
-        let newRecord: Omit<(typeof fields)[0], "id"> = {
+        let newRecord: Omit<(typeof arrayFields)[0], "id"> = {
           _id: control._id,
           value: "",
         };
-        if (control.type === ControlTypes.CheckBox) {
+        if (control.type === "CheckBox") {
           newRecord = {
             ...newRecord,
             value: {},
@@ -84,7 +91,7 @@ export default function Canvas({}: Props) {
         append(newRecord);
       }
     }
-  }, [controlConfig, append]);
+  }, [controlConfig, append, arrayFields]);
 
   return (
     <div className="shadow-md my-10 min-w-[35rem] overflow-y-auto p-4 bg-white rounded-md">
@@ -122,16 +129,14 @@ export default function Canvas({}: Props) {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submit)} className="space-y-2">
-          {fields.map(({ _id }, idx: number) => {
-            const current = controlConfig[idx];
-            console.log("current", current);
+          {arrayFields.map(({ _id }, idx: number) => {
+            const { properties, type } = controlConfig[idx];
             return (
               <ElementHandler key={_id} onEdit={() => handleSelect(idx)}>
-                <FormElement
+                <FormElement<FormValues>
                   name={`controls.${idx}.value` as const}
-                  label={current.label}
-                  type={current.type}
-                  options={current}
+                  type={type}
+                  properties={properties}
                   control={form.control}
                 />
               </ElementHandler>

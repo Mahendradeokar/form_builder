@@ -26,7 +26,7 @@ export type FormValues = {
   }[];
 };
 export type TFormControllerRenderProps<T extends ControlTypes = ControlTypes> =
-  T extends ControlTypes.CheckBox
+  T extends "CheckBox"
     ? ControllerRenderProps<
         FormValuesWithObjectType,
         `controls.${number}.value`
@@ -42,5 +42,5 @@ export interface IComponentConfig {
 
 export interface IControllerProps<T extends ControlTypes> {
   field: TFormControllerRenderProps<T>;
-  config: TFormControls<T>;
+  config: TFormControls<T>["properties"];
 }

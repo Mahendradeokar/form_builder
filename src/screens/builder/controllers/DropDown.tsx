@@ -9,11 +9,20 @@ import {
 } from "@/components/ui/select";
 import { FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { ControlTypes } from "@/types";
+import { objectEntities } from "@/lib/utils";
+import { convertComponentOptionsIntoArray } from "../services/controls";
 
 export default function DropDown({
   field,
   config,
-}: IControllerProps<ControlTypes.DropDown>) {
+}: IControllerProps<"DropDown">) {
+  const { options, placeholder } = config;
+
+  if (typeof options?.value === "string") {
+    return <p>Something went wrong. Please refresh site.</p>;
+  }
+
+  let ops = convertComponentOptionsIntoArray(options!.value);
   return (
     <>
       <Select
@@ -22,11 +31,11 @@ export default function DropDown({
       >
         <FormControl>
           <SelectTrigger>
-            <SelectValue placeholder={config.placeHolder} />
+            <SelectValue placeholder={placeholder.value as string} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>
-          {config.options.map((ops) => {
+          {ops.map((ops) => {
             return (
               <SelectItem key={ops.id} value={ops.value}>
                 {ops.label}

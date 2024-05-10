@@ -1,3 +1,25 @@
+// For getting event type by - Matt Pocock - TOtalTypescript
+type GetEventHandlers<T extends keyof JSX.IntrinsicElements> = Extract<
+  keyof JSX.IntrinsicElements[T],
+  `on${string}`
+>;
+
+/**
+ * Provides the event type for a given element and handler.
+ *
+ * @example
+ *
+ * type MyEvent = EventFor<"input", "onChange">;
+ */
+export type EventFor<
+  TElement extends keyof JSX.IntrinsicElements,
+  THandler extends GetEventHandlers<TElement>
+> = JSX.IntrinsicElements[TElement][THandler] extends
+  | ((e: infer TEvent) => any)
+  | undefined
+  ? TEvent
+  : never;
+
 import {
   TCheckBoxPropertiesConfig,
   TControlPropertiesConfig,
@@ -8,38 +30,41 @@ import {
 } from "@/config/types";
 
 // Component types
-export enum ControlTypes {
-  Text = "Text",
-  TextArea = "TextArea",
-  DropDown = "DropDown",
-  Radio = "Radio",
-  CheckBox = "CheckBox",
-}
+export const controlTypes = {
+  Text: "Text",
+  TextArea: "TextArea",
+  DropDown: "DropDown",
+  Radio: "Radio",
+  CheckBox: "CheckBox",
+  OptionsGenerator: "OptionsGenerator",
+} as const;
 
-interface Component<T extends string> {
+export type ControlTypes = keyof typeof controlTypes;
+
+interface Component<T extends ControlTypes> {
   componentType: T;
   componentName: string;
   componentId: number;
 }
 
-interface Text extends Component<ControlTypes.Text> {}
-interface TextArea extends Component<ControlTypes.TextArea> {}
+interface Text extends Component<"Text"> {}
+interface TextArea extends Component<"TextArea"> {}
 
 export type TComponentOptions = {
   label: string;
   value: string;
   id: string;
 };
-interface DropDown extends Component<ControlTypes.DropDown> {
+interface DropDown extends Component<"DropDown"> {
   options: TComponentOptions[];
   placeHolder: string;
 }
 
-export interface IRadio extends Component<ControlTypes.Radio> {
+export interface IRadio extends Component<"Radio"> {
   options: TComponentOptions[];
 }
 
-export interface ICheckBox extends Component<ControlTypes.CheckBox> {}
+export interface ICheckBox extends Component<"CheckBox"> {}
 
 export type Components = Text | DropDown | TextArea | IRadio | ICheckBox;
 
@@ -58,11 +83,9 @@ export type TElementTypes = Components["componentType"];
 
 export type TFormControls<T extends ControlTypes = ControlTypes> = {
   type: T;
-  name: string;
   _id: string;
-  label: string;
-  description?: string;
-} & TControlPropertiesConfig[T];
+  properties: TControlPropertiesConfig[T];
+};
 
 export interface IFormState {
   name: string;

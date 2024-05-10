@@ -3,7 +3,7 @@
 import { addComponent } from "@/lib/services/form/formSlice";
 import { useAppDispatch } from "@/lib/hook";
 import { cn } from "@/lib/utils";
-import { ControlTypes, IDropItemData } from "@/types";
+import { ControlTypes, IDropItemData, controlTypes } from "@/types";
 import { ComponentProps, Ref, useId } from "react";
 import { useDrop } from "react-dnd";
 
@@ -11,7 +11,7 @@ type Props = {
   children: React.ReactNode;
 } & ComponentProps<"div">;
 
-const acceptValues = Object.values(ControlTypes);
+const acceptValues = Object.values(controlTypes);
 
 export default function Draggable({ children, className }: Props) {
   const dispatch = useAppDispatch();

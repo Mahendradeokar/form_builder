@@ -9,14 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export default function Text({
-  field,
-  config,
-}: IControllerProps<ControlTypes.Text>) {
+export default function Text({ field, config }: IControllerProps<"Text">) {
   return (
     <>
       <FormControl>
-        <Input placeholder={config.placeholder} {...field} />
+        <Input placeholder={config.placeholder.value} {...field} />
       </FormControl>
     </>
   );

@@ -5,20 +5,26 @@ import { ComponentProps } from "react";
 import { IControllerProps } from "../types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
+import { convertComponentOptionsIntoArray } from "../services/controls";
 
-export default function Radio({
-  field,
-  config,
-}: IControllerProps<ControlTypes.Radio>) {
+export default function Radio({ field, config }: IControllerProps<"Radio">) {
   console.log("Radio button", field.value);
+  const { options, placeholder } = config;
+
+  if (options && typeof options.value === "string") {
+    return <p>Something went wrong. Please refresh site.</p>;
+  }
+
+  let ops = convertComponentOptionsIntoArray(options!.value);
+  const defaultValue = ops[0].value;
   return (
     <FormControl>
       <RadioGroup
         onValueChange={field.onChange}
-        defaultValue={config.defaultValue}
+        defaultValue={defaultValue}
         className="flex flex-col space-y-1"
       >
-        {config.options.map((ops) => {
+        {ops.map((ops) => {
           return (
             <FormItem
               key={ops.id}

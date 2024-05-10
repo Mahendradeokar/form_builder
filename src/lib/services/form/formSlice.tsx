@@ -27,8 +27,7 @@ const formSlice = createSlice({
       const props = {
         ...action.payload,
         _id: id,
-        name: defaultProperties.label,
-        ...defaultProperties,
+        properties: defaultProperties,
       };
       state.controlConfig.push(props);
       return state;
@@ -48,6 +47,7 @@ const formSlice = createSlice({
       state,
       action: PayloadAction<{ idx: number; update: TFormControls }>
     ) {
+      debugger;
       const { idx, update } = action.payload;
       state.controlConfig.splice(idx, 1, update);
       return state;

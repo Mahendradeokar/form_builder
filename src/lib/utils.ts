@@ -27,3 +27,28 @@ export function showMessage({
 }: { title: string; message: React.ReactNode } = NOT_FUNCTIONAL_MESSAGE) {
   toast({ title: title, description: message });
 }
+
+export const ObjectValues = <T>(obj: Record<string, T>): T[] =>
+  Object.values(obj) as T[];
+
+export const objectEntities = <TData extends Record<any, any>>(obj: {
+  [K in keyof TData]: TData[K];
+}): [keyof TData, TData[keyof TData]][] =>
+  Object.entries(obj) as [keyof TData, TData[keyof TData]][];
+
+export const jsonParse = <TData extends string>(
+  jsonSting: TData
+): Array<any> | Record<string, any> | string => {
+  try {
+    const parsedData = JSON.parse(jsonSting) as
+      | Array<any>
+      | Record<string, any>;
+    return parsedData;
+  } catch (error) {
+    return jsonSting as string;
+  }
+};
+
+export const isArrayEmpty = (arr: unknown[]) => {
+  return arr.length === 0;
+};

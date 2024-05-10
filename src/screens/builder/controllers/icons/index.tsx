@@ -45,11 +45,11 @@ const CheckBox = () => {
 };
 
 const FormElementsIcons = {
-  [ControlTypes.Text]: Text,
-  [ControlTypes.TextArea]: TextArea,
-  [ControlTypes.DropDown]: DropDown,
-  [ControlTypes.Radio]: Radio,
-  [ControlTypes.CheckBox]: CheckBox,
+  Text: Text,
+  TextArea: TextArea,
+  DropDown: DropDown,
+  Radio: Radio,
+  CheckBox: CheckBox,
 };
 
 export default FormElementsIcons;

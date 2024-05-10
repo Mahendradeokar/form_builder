@@ -16,3 +16,6 @@ Tasks
 - edit form
 - design changes
 - Sign up / login
+
+
+- remove isVisible

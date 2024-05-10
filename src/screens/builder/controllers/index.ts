@@ -5,6 +5,7 @@ import { ControlTypes } from "@/types";
 import Radio from "./Radio";
 import Checkbox from "./Checkbox";
 import { IControllerProps } from "../types";
+import OptionsGenerator from "./OptionsGenerator";
 export { default as FormElement } from "./FormElement";
 
 type Controller<T extends ControlTypes> = (
@@ -14,11 +15,12 @@ type Controller<T extends ControlTypes> = (
 const Controllers: {
   [K in ControlTypes]: Controller<K>;
 } = {
-  [ControlTypes.Text]: Text,
-  [ControlTypes.TextArea]: TextArea,
-  [ControlTypes.DropDown]: DropDown,
-  [ControlTypes.Radio]: Radio,
-  [ControlTypes.CheckBox]: Checkbox,
+  Text: Text,
+  TextArea: TextArea,
+  DropDown: DropDown,
+  Radio: Radio,
+  CheckBox: Checkbox,
+  OptionsGenerator: OptionsGenerator,
 };
 
 export default Controllers;

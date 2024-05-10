@@ -8,11 +8,11 @@
   .sidebar {
     --sidebar-grow: 1;
     --min-width: 17rem;
-    @apply flex-grow-[--sidebar-grow] min-w-[--min-width] p-4;
+    @apply flex-grow-[--sidebar-grow] min-w-[--min-width] p-4 max-h-full overflow-auto;
   }
 
   .mainContent {
     --main-content-grow: 999;
-    @apply basis-0 flex-grow-[--main-content-grow] min-w-[40%] h-full  bg-slate-200;
+    @apply basis-0 flex-grow-[--main-content-grow] min-w-[40%] max-h-full  bg-slate-200;
   }
 }
