@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { cn, showMessage } from "@/lib/utils";
+import { cn, showToast } from "@/lib/utils";
 import { Cross2Icon, MoveIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
 import { ComponentProps } from "react";
@@ -30,9 +30,9 @@ export default function ElementHandler({
   children,
   onEdit,
   onMove = () => {
-    showMessage();
+    showToast();
   },
-  onRemove = () => showMessage(),
+  onRemove = () => showToast(),
   className,
 }: Props) {
   return (

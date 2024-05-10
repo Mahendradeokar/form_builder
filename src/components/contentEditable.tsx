@@ -6,14 +6,13 @@ import { Input } from "./ui/input";
 interface TContentEditableProps extends React.HTMLAttributes<HTMLOrSVGElement> {
   as: React.ElementType;
   onEdit: (v: string) => void;
-  children: string;
   isEditMode: boolean;
+  value: string;
 }
 
 export default function ContentEditable({
   as: Component,
   onEdit,
-  children,
   isEditMode,
   ...rest
 }: TContentEditableProps) {
@@ -21,9 +20,9 @@ export default function ContentEditable({
     <Input
       {...rest}
       onChange={(e) => onEdit(e.target.value)}
-      value={children}
+      value={rest.value}
     />
   ) : (
-    <Component {...rest}>{children}</Component>
+    <Component {...rest}>{rest.value}</Component>
   );
 }

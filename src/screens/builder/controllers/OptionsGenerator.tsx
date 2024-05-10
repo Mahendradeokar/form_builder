@@ -8,8 +8,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { cn, generateUniqueId } from "@/lib/utils";
+import { Cross2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { cn, generateUniqueId, showToast } from "@/lib/utils";
 import { ControlPropertyWithOptions } from "@/config/types";
 import { convertComponentOptionsIntoArray } from "../services/controls";
 import { EventFor } from "@/types";
@@ -21,15 +21,19 @@ const Option = ({
   label,
   className,
   onTextChange,
+  onRemove,
+  isRemovable,
 }: {
   _id: string | number;
   value: string;
   label: string;
+  isRemovable: boolean;
   onTextChange: (arg: {
     id: string | number;
     value: string;
     field: keyof ControlPropertyWithOptions["value"][string | number];
   }) => void;
+  onRemove: (id: string | number) => void;
 } & ComponentProps<"div">) => {
   const handlerChange = (
     value: string,
@@ -38,7 +42,15 @@ const Option = ({
     onTextChange({ id: _id, field, value: value });
   };
   return (
-    <div className={cn("grid gap-2 shadow-md p-3 mt-2", className)}>
+    <div className={cn("grid gap-2 shadow-md p-3 mt-2 relative", className)}>
+      {isRemovable && (
+        <div
+          className="absolute top-[10px] right-0"
+          onClick={() => onRemove(_id)}
+        >
+          <Cross2Icon width={15} height={15} />
+        </div>
+      )}
       <label>Label</label>
       <Input
         onChange={(e) => handlerChange(e.target.value, "label")}
@@ -55,13 +67,11 @@ const Option = ({
 };
 
 export default function OptionsGenerator({
-  field,
+  field: formField,
   config,
 }: IControllerProps<"OptionsGenerator">) {
-  const fieldVal = field.value as any;
-  const [optionsValues, setOptionsValues] = useState(
-    fieldVal as ControlPropertyWithOptions["value"]
-  );
+  const fieldVal = formField.value as any;
+
   // handlers
   const handlerAddOptions = () => {
     const uniqId = generateUniqueId();
@@ -70,8 +80,9 @@ export default function OptionsGenerator({
       value: "Option value",
     };
 
-    setOptionsValues((preVal) => {
-      return { ...preVal, [uniqId]: entry };
+    formField.onChange({
+      ...(fieldVal as ControlPropertyWithOptions["value"]),
+      [uniqId]: entry,
     });
   };
 
@@ -84,16 +95,20 @@ export default function OptionsGenerator({
     field: keyof ControlPropertyWithOptions["value"][string | number];
     value: string;
   }) => {
-    const optionsVals = { ...optionsValues };
-    optionsValues[id][field] = value;
-    setOptionsValues(optionsVals);
+    const optionsVals = { ...fieldVal } as ControlPropertyWithOptions["value"];
+    optionsVals[id][field] = value;
+    formField.onChange(optionsVals);
   };
 
-  const handleOnUpdate = () => {
-    field.onChange(optionsValues);
+  const handleRemove = (id: string | number) => {
+    const clone = { ...fieldVal } as ControlPropertyWithOptions["value"];
+    if (Object.keys(clone).length > 1) {
+      delete clone[id];
+      formField.onChange(clone);
+    }
   };
 
-  let listOfOptions = convertComponentOptionsIntoArray(optionsValues);
+  let listOfOptions = convertComponentOptionsIntoArray(fieldVal);
   return (
     <FormControl>
       <>
@@ -117,12 +132,11 @@ export default function OptionsGenerator({
                 label={prop.label}
                 key={prop.id}
                 onTextChange={handleOnChange}
+                onRemove={handleRemove}
+                isRemovable={listOfOptions.length > 1}
               />
             );
           })}
-          <Button type="button" onClick={handleOnUpdate}>
-            Update Options
-          </Button>
         </div>
       </>
     </FormControl>

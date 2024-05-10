@@ -19,13 +19,19 @@ const NOT_FUNCTIONAL_MESSAGE = {
   message:
     "Feature not functional yet. Under development. Apologies for inconvenience.",
   title: "Incomplete Feature: Under Development",
+  variant: "default" as const,
 };
 
-export function showMessage({
+export function showToast({
   title,
   message,
-}: { title: string; message: React.ReactNode } = NOT_FUNCTIONAL_MESSAGE) {
-  toast({ title: title, description: message });
+  variant,
+}: {
+  title: string;
+  message: React.ReactNode;
+  variant?: "default" | "destructive";
+} = NOT_FUNCTIONAL_MESSAGE) {
+  toast({ title: title, description: message, variant: variant });
 }
 
 export const ObjectValues = <T>(obj: Record<string, T>): T[] =>

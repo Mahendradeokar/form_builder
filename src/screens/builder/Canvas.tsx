@@ -16,7 +16,7 @@ import { FormElement } from "./controllers";
 import { FormValues } from "./types";
 import ElementHandler from "./components/ElementHandler";
 import { getActive, setActive } from "@/lib/services/form/controlState";
-import { showMessage } from "@/lib/utils";
+import { showToast } from "@/lib/utils";
 import { shouldAppend } from "./services/controls";
 import { useFormBuilder } from "./hooks/useFormBuilder";
 
@@ -36,6 +36,8 @@ export default function Canvas({}: Props) {
     formFields,
     arrayFields,
     append,
+    move,
+    remove,
     formMethod: form,
   } = useFormBuilder<FormValues>();
   const { name, description, controlConfig } = formFields;
@@ -52,14 +54,13 @@ export default function Canvas({}: Props) {
 
   const handleFormDetailsChange = useCallback(
     (value: string | null, field: TFormDetailsSetterAllowedField) => {
-      // TODO - Add validation for empty string
       dispatch(formDetailsSetter({ field, value: value ?? "" }));
     },
     [dispatch]
   );
 
   const submit: SubmitHandler<FormValues> = useCallback((value) => {
-    showMessage({
+    showToast({
       title: "Form Data",
       message: (
         <pre>
@@ -107,9 +108,8 @@ export default function Canvas({}: Props) {
             onEdit={(value) => {
               handleFormDetailsChange(value, "name");
             }}
-          >
-            {name}
-          </ContentEditable>
+            value={name}
+          />
         </ElementHandler>
         <ElementHandler
           onEdit={() => handleSelect("DESCRIPTION")}
@@ -122,9 +122,8 @@ export default function Canvas({}: Props) {
             onEdit={(value) => {
               handleFormDetailsChange(value, "description");
             }}
-          >
-            {description}
-          </ContentEditable>
+            value={description}
+          />
         </ElementHandler>
       </div>
       <Form {...form}>
@@ -132,7 +131,11 @@ export default function Canvas({}: Props) {
           {arrayFields.map(({ _id }, idx: number) => {
             const { properties, type } = controlConfig[idx];
             return (
-              <ElementHandler key={_id} onEdit={() => handleSelect(idx)}>
+              <ElementHandler
+                key={_id}
+                onEdit={() => handleSelect(idx)}
+                onRemove={() => remove(idx)}
+              >
                 <FormElement<FormValues>
                   name={`controls.${idx}.value` as const}
                   type={type}

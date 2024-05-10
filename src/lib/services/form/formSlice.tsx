@@ -47,9 +47,13 @@ const formSlice = createSlice({
       state,
       action: PayloadAction<{ idx: number; update: TFormControls }>
     ) {
-      debugger;
       const { idx, update } = action.payload;
       state.controlConfig.splice(idx, 1, update);
+      return state;
+    },
+    removeControl(state, action: PayloadAction<number>) {
+      const idx = action.payload;
+      state.controlConfig.splice(idx, 1);
       return state;
     },
   },
@@ -59,7 +63,11 @@ const formSlice = createSlice({
   },
 });
 
-export const { addComponent, formDetailsSetter, updateControlConfigByIndex } =
-  formSlice.actions;
+export const {
+  addComponent,
+  formDetailsSetter,
+  updateControlConfigByIndex,
+  removeControl,
+} = formSlice.actions;
 export const { selectForm, selectFormControlsConfig } = formSlice.selectors;
 export default formSlice;

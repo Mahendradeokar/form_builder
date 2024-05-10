@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/lib/hook";
-import { selectForm } from "@/lib/services/form/formSlice";
+import { removeControl, selectForm } from "@/lib/services/form/formSlice";
 import { useCallback } from "react";
 import {
   ArrayPath,
@@ -22,6 +22,7 @@ export function useFormBuilder<TFormData extends Values>() {
   const formFields = useAppSelector(selectForm);
 
   // Hooks
+  const dispatch = useAppDispatch();
   const methods = useForm<TFormData>();
   const {
     fields,
@@ -42,10 +43,11 @@ export function useFormBuilder<TFormData extends Values>() {
   );
 
   const remove = useCallback(
-    (index: number | number[]) => {
+    (index: number) => {
+      dispatch(removeControl(index));
       return removeField(index);
     },
-    [removeField]
+    [removeField, dispatch]
   );
 
   const move = useCallback(
