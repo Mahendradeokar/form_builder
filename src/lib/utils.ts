@@ -1,6 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 import { nanoid } from "@reduxjs/toolkit";
 import { type ClassValue, clsx } from "clsx";
+import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -58,3 +59,9 @@ export const jsonParse = <TData extends string>(
 export const isArrayEmpty = (arr: unknown[]) => {
   return arr.length === 0;
 };
+
+export function fixedForwardRef<T, P = {}>(
+  render: (props: P, ref: React.Ref<T>) => React.ReactNode
+): (props: P & React.RefAttributes<T>) => React.ReactNode {
+  return forwardRef(render) as any;
+}

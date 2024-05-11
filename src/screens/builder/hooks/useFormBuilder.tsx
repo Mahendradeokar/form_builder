@@ -67,6 +67,7 @@ export function useFormBuilder<TFormData extends Values>() {
   return {
     arrayFields: fields,
     formMethod: methods,
+    clearErrors: methods.clearErrors,
     formFields,
     append,
     replace,

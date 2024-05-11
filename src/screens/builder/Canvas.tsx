@@ -17,7 +17,7 @@ import { FormValues } from "./types";
 import ElementHandler from "./components/ElementHandler";
 import { getActive, setActive } from "@/lib/services/form/controlState";
 import { showToast } from "@/lib/utils";
-import { shouldAppend } from "./services/controls";
+import { shouldAppend, validate } from "./services/controls";
 import { useFormBuilder } from "./hooks/useFormBuilder";
 
 interface Props {}
@@ -39,6 +39,7 @@ export default function Canvas({}: Props) {
     move,
     remove,
     formMethod: form,
+    clearErrors,
   } = useFormBuilder<FormValues>();
   const { name, description, controlConfig } = formFields;
   const dispatch = useAppDispatch();
@@ -59,16 +60,46 @@ export default function Canvas({}: Props) {
     [dispatch]
   );
 
-  const submit: SubmitHandler<FormValues> = useCallback((value) => {
-    showToast({
-      title: "Form Data",
-      message: (
-        <pre>
-          <code>{JSON.stringify(value, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }, []);
+  const submit: SubmitHandler<FormValues> = useCallback(
+    (value) => {
+      let isErrors = false;
+      debugger;
+      value.controls.forEach((field, idx: number) => {
+        const CConfig = findControlConfigById(field._id, controlConfig);
+        if (CConfig?.validations) {
+          const validations = CConfig.validations;
+          const typeOfValue =
+            typeof field.value === "string" ? "string" : "object";
+          const result = validate({
+            validations,
+            value: field.value,
+            type: typeOfValue,
+          });
+          const fieldName = `controls.${idx}.value` as const;
+          if (!result.success) {
+            isErrors = true;
+            form.setError(fieldName, {
+              message: result.message,
+            });
+          } else {
+            clearErrors(fieldName);
+          }
+        }
+      });
+
+      if (!isErrors) {
+        showToast({
+          title: "Form Data",
+          message: (
+            <pre>
+              <code>{JSON.stringify(value, null, 2)}</code>
+            </pre>
+          ),
+        });
+      }
+    },
+    [controlConfig]
+  );
 
   // useEffects
   useEffect(() => {
@@ -129,18 +160,21 @@ export default function Canvas({}: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submit)} className="space-y-2">
           {arrayFields.map(({ _id }, idx: number) => {
-            const { properties, type } = controlConfig[idx];
+            const { properties, type, validations } = controlConfig[idx];
             return (
               <ElementHandler
                 key={_id}
                 onEdit={() => handleSelect(idx)}
                 onRemove={() => remove(idx)}
+                index={idx}
               >
                 <FormElement<FormValues>
                   name={`controls.${idx}.value` as const}
                   type={type}
                   properties={properties}
                   control={form.control}
+                  validations={validations}
+                  clearErrors={clearErrors}
                 />
               </ElementHandler>
             );
@@ -153,3 +187,10 @@ export default function Canvas({}: Props) {
     </div>
   );
 }
+
+const findControlConfigById = (
+  _id: string,
+  config: IFormState["controlConfig"]
+) => {
+  return config.find((item) => item._id === _id);
+};

@@ -1,10 +1,17 @@
-import { ControlTypes, TComponentOptions, TFormControls } from "@/types";
+import {
+  ControlTypes,
+  TComponentOptions,
+  TFormControls,
+  ValidationType,
+} from "@/types";
 import { ComponentProps } from "react";
 import {
   ControllerProps,
   ControllerRenderProps,
   FieldPath,
 } from "react-hook-form";
+import { StringValidationType } from "./services/validations/string";
+import { ObjectValidationType } from "./services/validations/object";
 
 interface FormValuesWithObjectType {
   controls: {
@@ -44,3 +51,7 @@ export interface IControllerProps<T extends ControlTypes> {
   field: TFormControllerRenderProps<T>;
   config: TFormControls<T>["properties"];
 }
+
+export type GetValidationParams =
+  | Parameters<StringValidationType[ValidationType]>[1]
+  | Parameters<ObjectValidationType[ValidationType]>[1];

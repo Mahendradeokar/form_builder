@@ -10,7 +10,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
+import { cn, jsonParse } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { FormValues } from "@/screens/builder/types";
 
@@ -146,8 +146,19 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-  const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const { error, formMessageId, name } = useFormField();
+
+  let body = null;
+  const arrayOfErrors = jsonParse(error?.message ?? "");
+  const isErrorArray = Array.isArray(arrayOfErrors);
+  if (error?.message && isErrorArray) {
+    debugger;
+    const [_, index] = name.split(".");
+    body =
+      (arrayOfErrors as (typeof error)[])[Number(index)].message ?? children;
+  } else {
+    body = error ? String(error?.message) : children;
+  }
 
   if (!body) {
     return null;

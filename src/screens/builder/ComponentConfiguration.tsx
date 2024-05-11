@@ -19,12 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect } from "react";
 import { ControlTypes, IFormState } from "@/types";
-import {
-  ObjectValues,
-  isEmpty,
-  objectEntities,
-  showToast,
-} from "@/lib/utils";
+import { ObjectValues, isEmpty, objectEntities, showToast } from "@/lib/utils";
 import { getActive } from "@/lib/services/form/controlState";
 import { useFormBuilder } from "./hooks/useFormBuilder";
 import { FormElement } from "./controllers";

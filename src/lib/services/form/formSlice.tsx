@@ -8,11 +8,13 @@ import {
 } from "@/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { getDefaultProps } from "./controllersProperties";
+import { getDefaultValidations } from "@/screens/builder/services/validations";
 
 const initialState: IFormState = {
   name: "Edit Title",
   description: "Edit Description",
   controlConfig: [],
+  validations: {},
 };
 
 const formSlice = createSlice({
@@ -23,11 +25,13 @@ const formSlice = createSlice({
       const id = generateUniqueId();
       const { type } = action.payload;
       const defaultProperties = getDefaultProps(type);
+      const defaultValidations = getDefaultValidations(type);
 
       const props = {
         ...action.payload,
         _id: id,
         properties: defaultProperties,
+        validations: defaultValidations,
       };
       state.controlConfig.push(props);
       return state;
@@ -56,6 +60,13 @@ const formSlice = createSlice({
       state.controlConfig.splice(idx, 1);
       return state;
     },
+    moveControl(state, action: PayloadAction<{ from: number; to: number }>) {
+      const { from, to } = action.payload;
+      const controlConfig = state.controlConfig;
+      const [removedEle] = controlConfig.splice(from, 1);
+      controlConfig.splice(to, 0, removedEle);
+      return state;
+    },
   },
   selectors: {
     selectForm: (form) => form,
@@ -68,6 +79,7 @@ export const {
   formDetailsSetter,
   updateControlConfigByIndex,
   removeControl,
+  moveControl,
 } = formSlice.actions;
 export const { selectForm, selectFormControlsConfig } = formSlice.selectors;
 export default formSlice;

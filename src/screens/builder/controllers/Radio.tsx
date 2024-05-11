@@ -16,12 +16,10 @@ export default function Radio({ field, config }: IControllerProps<"Radio">) {
   }
 
   let ops = convertComponentOptionsIntoArray(options!.value);
-  const defaultValue = ops[0].value;
   return (
     <FormControl>
       <RadioGroup
         onValueChange={field.onChange}
-        defaultValue={defaultValue}
         className="flex flex-col space-y-1"
       >
         {ops.map((ops) => {

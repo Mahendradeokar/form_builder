@@ -20,6 +20,7 @@ export type EventFor<
   ? TEvent
   : never;
 
+import { controlTypes, validationsType } from "@/config/formConfig";
 import {
   TCheckBoxPropertiesConfig,
   TControlPropertiesConfig,
@@ -27,19 +28,13 @@ import {
   TRadioPropertiesConfig,
   TTextAreaPropertiesConfig,
   TTextPropertiesConfig,
+  ValidationConfig,
 } from "@/config/types";
 
 // Component types
-export const controlTypes = {
-  Text: "Text",
-  TextArea: "TextArea",
-  DropDown: "DropDown",
-  Radio: "Radio",
-  CheckBox: "CheckBox",
-  OptionsGenerator: "OptionsGenerator",
-} as const;
 
 export type ControlTypes = keyof typeof controlTypes;
+export type ValidationType = keyof typeof validationsType;
 
 interface Component<T extends ControlTypes> {
   componentType: T;
@@ -85,17 +80,19 @@ export type TFormControls<T extends ControlTypes = ControlTypes> = {
   type: T;
   _id: string;
   properties: TControlPropertiesConfig[T];
+  validations: ValidationConfig[T];
 };
 
 export interface IFormState {
   name: string;
   description: string;
   controlConfig: TFormControls<ControlTypes>[];
+  validations: ValidationConfig[ControlTypes];
 }
 
-export type TFormDetailsSetterAllowedField = keyof Omit<
+export type TFormDetailsSetterAllowedField = keyof Pick<
   IFormState,
-  "controlConfig"
+  "name" | "description"
 >;
 
 // Drop item pass data type

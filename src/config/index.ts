@@ -1,1 +1,1 @@
-export { elementConfig } from "./formElements.config";
+export { elementConfig } from "./formConfig";

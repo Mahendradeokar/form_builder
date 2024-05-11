@@ -12,20 +12,30 @@ import {
   IComponentConfig,
   TFormControllerRenderProps,
 } from "../types";
-import { objectEntities } from "@/lib/utils";
+import { jsonParse, objectEntities } from "@/lib/utils";
 import { ControlPropertyWithOptions } from "@/config/types";
+import { getValidations } from "./validations";
+import { FieldPath } from "react-hook-form";
 
+// Types
 type TControlType = keyof typeof ControllersIcons & ControlTypes;
-
-export const renderIcon = (type: TControlType) => {
-  return ControllersIcons[type]();
-};
 
 interface IRenderControllers<T extends ControlTypes> {
   type: T;
   field: TFormControllerRenderProps<T> | any;
   config: TFormControls<T>["properties"];
 }
+
+interface ValidateArg {
+  validations: TFormControls["validations"];
+  value: string | Record<any, any>;
+  type: "object" | "string";
+}
+
+// service
+export const renderIcon = (type: TControlType) => {
+  return ControllersIcons[type]();
+};
 
 export const renderControllers = <T extends ControlTypes>({
   type,
@@ -51,4 +61,22 @@ export const convertComponentOptionsIntoArray = (
   return objectEntities(obj).map(([id, values]) => {
     return { id, ...values };
   });
+};
+
+export const validate = ({ validations, value, type }: ValidateArg) => {
+  const schema = getValidations(validations, type);
+  const result = schema.safeParse(value);
+  let errorMessage = null;
+  const parseData = jsonParse(result.error?.message ?? "");
+  const isArray = Array.isArray(parseData);
+  debugger;
+  if (!result.success && isArray) {
+    errorMessage = (parseData as (typeof result.error)[])[0].message;
+  } else {
+    errorMessage = result.error?.message;
+  }
+  return {
+    success: result.success,
+    message: errorMessage,
+  };
 };

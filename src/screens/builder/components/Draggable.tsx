@@ -10,10 +10,10 @@ interface Props {
 }
 
 export default function Draggable({ children, type }: Props) {
-  const [collected, drag] = useDrag<IDropItemData>({
+  const [collected, drag] = useDrag<IDropItemData>(() => ({
     type: type,
     item: { type },
-  });
+  }));
 
   const draggable = drag as unknown;
   return <div ref={draggable as Ref<HTMLDivElement>}>{children}</div>;

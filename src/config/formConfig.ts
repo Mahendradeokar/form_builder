@@ -1,5 +1,22 @@
-import { ControlTypes, controlTypes, type TElementConfig } from "@/types";
-import { TControlPropertiesConfig } from "./types";
+import { ControlTypes, type TElementConfig } from "@/types";
+import { TControlPropertiesConfig, ValidationConfig } from "./types";
+
+// Component types
+export const controlTypes = {
+  Text: "Text",
+  TextArea: "TextArea",
+  DropDown: "DropDown",
+  Radio: "Radio",
+  CheckBox: "CheckBox",
+  OptionsGenerator: "OptionsGenerator",
+} as const;
+
+export const validationsType = {
+  isRequired: "isRequired",
+  formateBy: "formateBy",
+  minLength: "minLength",
+  maxLength: "maxLength",
+} as const;
 
 export const elementConfig: readonly TElementConfig[] = [
   {
@@ -189,4 +206,23 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
       isVisible: true,
     },
   },
+};
+
+export const defaultValidations: ValidationConfig = {
+  DropDown: { isRequired: true },
+  Text: {
+    isRequired: true,
+    maxLength: 10,
+    minLength: 5,
+    formateBy: "^\\S+@\\S+\\.\\S+$",
+  },
+  TextArea: {
+    isRequired: true,
+    maxLength: 20,
+    minLength: 10,
+    formateBy: "^\\S+@\\S+\\.\\S+$",
+  },
+  Radio: { isRequired: true },
+  CheckBox: { isRequired: true, minLength: 1, maxLength: 2 },
+  OptionsGenerator: { isRequired: true },
 };

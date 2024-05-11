@@ -1,4 +1,4 @@
-import { controlPropertiesConfig } from "@/config/formElements.config";
+import { controlPropertiesConfig } from "@/config/formConfig";
 import { ControlTypes } from "@/types";
 
 export const getDefaultProps = (type: ControlTypes) => {
