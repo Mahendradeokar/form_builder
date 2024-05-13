@@ -6,11 +6,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { controls } from "../services";
-import {
-  ControlTypes,
-  InputValue,
-  TFormControls,
-} from "@/types";
+import { ControlTypes, InputValue, TFormControls } from "@/types";
 import {
   ControllerProps,
   FieldPath,
@@ -18,9 +14,7 @@ import {
 } from "react-hook-form";
 import { FormElementProperties, IComponentConfig } from "../types";
 import { Ref, forwardRef } from "react";
-import {
-  getApplicableValidations,
-} from "../services/validations";
+import { getApplicableValidations } from "../services/validations";
 import { validate } from "../services/controls";
 import { convertToNormalString } from "@/lib/utils";
 import Label from "./Label";
@@ -36,17 +30,15 @@ type FormElementProps<
   clearErrors?: UseFormClearErrors<TFieldValues>;
 } & ControllerProps<TFieldValues, TName>;
 
-const FormElement = <TFormData extends Record<"controls", any>>(
-  {
-    type,
-    properties,
-    validations,
-    control,
-    clearErrors,
-    name,
-    ...props
-  }: Omit<FormElementProps<TFormData>, "render">,
-) => {
+const FormElement = <TFormData extends Record<"controls", any>>({
+  type,
+  properties,
+  validations,
+  control,
+  clearErrors,
+  name,
+  ...props
+}: Omit<FormElementProps<TFormData>, "render">) => {
   const { label, description } = properties;
 
   // handlers
@@ -58,8 +50,9 @@ const FormElement = <TFormData extends Record<"controls", any>>(
     value: Extract<InputValue, string | Record<any, any>>;
   }) => {
     if (isDirty && validations) {
-      const typeOfValue = typeof value === "string" ? "string" : "object";
+      const typeOfValue = typeof value === "object" ? "object" : "string";
       const applicableValidations = getApplicableValidations(validations);
+      debugger;
       const result = validate({
         validations: applicableValidations,
         value: value,

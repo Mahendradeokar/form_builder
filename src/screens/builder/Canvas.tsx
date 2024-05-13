@@ -72,7 +72,7 @@ export default function Canvas({ preview }: Props) {
         if (CConfig?.validations) {
           const validations = getApplicableValidations(CConfig.validations);
           const typeOfValue =
-            typeof field.value === "string" ? "string" : "object";
+            typeof field.value === "object" ? "object" : "string";
           let safeTypeValue;
 
           if (isPrimitive(field.value)) {
@@ -80,7 +80,7 @@ export default function Canvas({ preview }: Props) {
           } else {
             safeTypeValue = field.value;
           }
-
+          debugger;
           const result = validate({
             validations,
             value: safeTypeValue,
