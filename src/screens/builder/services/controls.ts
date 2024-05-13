@@ -1,22 +1,14 @@
-import {
-  ControlTypes,
-  IFormState,
-  TComponentOptions,
-  TFormControls,
-} from "@/types";
+import { ControlTypes, IFormState, TFormControls } from "@/types";
 import ControllersIcons from "../controllers/icons";
 import Controllers from "../controllers";
-import { ComponentProps } from "react";
 import {
   FormElementProperties,
   FormValues,
-  IComponentConfig,
   TFormControllerRenderProps,
 } from "../types";
 import { jsonParse, objectEntities } from "@/lib/utils";
 import { ControlPropertyWithOptions } from "@/config/types";
 import { getValidations } from "./validations";
-import { FieldPath } from "react-hook-form";
 
 // Types
 type TControlType = keyof typeof ControllersIcons & ControlTypes;
@@ -51,7 +43,6 @@ export const shouldAppend = (
 ) => {
   const isNewEntry = controlConfig.every(({ _id: controllerId }) => {
     return field.some(({ _id: fieldId }) => {
-      console.log(controllerId, fieldId);
       return fieldId === controllerId;
     });
   });
@@ -73,7 +64,6 @@ export const validate = ({ validations, value, type }: ValidateArg) => {
   let errorMessage = null;
   const parseData = jsonParse(result.error?.message ?? "");
   const isArray = Array.isArray(parseData);
-  debugger;
   if (!result.success && isArray) {
     errorMessage = (parseData as (typeof result.error)[])[0].message;
   } else {

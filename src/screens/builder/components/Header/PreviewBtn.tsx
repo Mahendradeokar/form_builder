@@ -5,11 +5,11 @@ import { useState } from "react";
 import { Switch } from "../../../../components/ui/switch";
 
 export default function PreviewBtn() {
-  const [isPreview, setPreview] = useState(false);
   const router = useRouter();
   const currentPath = usePathname();
   const params = useSearchParams();
   const preview = params.get("preview");
+  const [isPreview, setPreview] = useState(Boolean(preview));
 
   const handlePreview = (isSwitched: boolean) => {
     let path = currentPath;

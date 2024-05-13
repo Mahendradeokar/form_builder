@@ -18,7 +18,6 @@ const maxLength = (schema: ZodString, param: number) =>
   });
 
 const formateBy = (schema: ZodString, param: string) => {
-  debugger;
   return schema.regex(new RegExp(param), {
     message: "Please provide the valid string",
   });

@@ -112,21 +112,16 @@ export default function OptionsGenerator({
   return (
     <FormControl>
       <>
-        <div className=" mt-3 gap-2 items-center">
+        <div className=" mt-3 gap-2 flex justify-between items-center">
           <label>Add Options</label>
-          <div className="flex justify-between items-center">
-            <Button type="button" className="flex gap-1" variant={"ghost"}>
-              Validations
-            </Button>
-            <Button
-              type="button"
-              className="flex gap-1"
-              variant={"ghost"}
-              onClick={handlerAddOptions}
-            >
-              <PlusCircledIcon width={15} height={15} />
-            </Button>
-          </div>
+          <Button
+            type="button"
+            className="flex gap-1"
+            variant={"ghost"}
+            onClick={handlerAddOptions}
+          >
+            <PlusCircledIcon width={15} height={15} />
+          </Button>
         </div>
         <div>
           {listOfOptions.map((prop) => {

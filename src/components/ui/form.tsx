@@ -152,7 +152,6 @@ const FormMessage = React.forwardRef<
   const arrayOfErrors = jsonParse(error?.message ?? "");
   const isErrorArray = Array.isArray(arrayOfErrors);
   if (error?.message && isErrorArray) {
-    debugger;
     const [_, index] = name.split(".");
     body =
       (arrayOfErrors as (typeof error)[])[Number(index)].message ?? children;

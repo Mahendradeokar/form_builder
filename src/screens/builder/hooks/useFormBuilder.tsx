@@ -56,16 +56,11 @@ export function useFormBuilder<TFormData extends Values>() {
 
   const move = useCallback(
     ({ from, to }: { from: number; to: number }) => {
-      debugger;
       dispatch(moveControl({ from, to }));
       moveField(from, to);
     },
     [moveField, dispatch]
   );
-
-  useEffect(() => {
-    console.log(fields);
-  }, [fields]);
 
   const replace = useCallback(
     (arg: InsertDataType<TFormData>) => {

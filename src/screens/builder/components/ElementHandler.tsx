@@ -39,6 +39,7 @@ interface Props extends ComponentProps<"div"> {
   onEdit: () => void;
   onMove?: (arg: { from: number; to: number }) => void;
   onRemove?: () => void;
+  preview: boolean;
 }
 
 const DRAG_TYPE = "CONTROL";
@@ -50,6 +51,7 @@ export default function ElementHandler({
   onRemove,
   onMove,
   className,
+  preview,
 }: Props) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: DRAG_TYPE,
@@ -89,11 +91,13 @@ export default function ElementHandler({
         className={cn("relative shadow-md  rounded-sm p-4 group", className)}
         ref={index !== undefined ? droppable : undefined}
       >
-        <div className="absolute top-[-10] right-0 hidden gap-2 group-hover:flex">
-          <Icons Icon={MoveIcon} />
-          <Icons Icon={Pencil1Icon} onClick={onEdit} />
-          <Icons Icon={Cross2Icon} onClick={onRemove} />
-        </div>
+        {!preview && (
+          <div className="absolute top-[-10] right-0 hidden gap-2 group-hover:flex">
+            <Icons Icon={MoveIcon} />
+            <Icons Icon={Pencil1Icon} onClick={onEdit} />
+            <Icons Icon={Cross2Icon} onClick={onRemove} />
+          </div>
+        )}
         {children}
       </div>
     </div>

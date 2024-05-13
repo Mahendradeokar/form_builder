@@ -56,17 +56,17 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
   DropDown: {
     label: {
       type: controlTypes.Text,
-      value: "Drop down",
+      value: "Dropdown Field",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Drop down Placeholder",
+      value: "Select an option",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Drop down description",
+      value: "Choose from the available options",
       memberOf: "properties",
     },
     options: {
@@ -74,12 +74,12 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
       memberOf: "properties",
       value: {
         1: {
-          value: "Options1",
-          label: "Please Select options 1",
+          value: "Option1",
+          label: "Option 1",
         },
         2: {
-          value: "Options2",
-          label: "Please Select options 2",
+          value: "Option2",
+          label: "Option 2",
         },
       },
     },
@@ -87,34 +87,34 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
   Text: {
     label: {
       type: controlTypes.Text,
-      value: "Text",
+      value: "Text Field",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Text Placeholder",
+      value: "Enter text",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Text description",
+      value: "Enter some text",
       memberOf: "properties",
     },
   },
   TextArea: {
     label: {
       type: controlTypes.Text,
-      value: "Text area",
+      value: "Text Area",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Text area Placeholder",
+      value: "Enter description",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Text area description",
+      value: "Provide detailed information",
       memberOf: "properties",
     },
   },
@@ -122,17 +122,17 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
   Radio: {
     label: {
       type: controlTypes.Text,
-      value: "Radio",
+      value: "Radio Buttons",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Radio Placeholder",
+      value: "Select an option",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Radio description",
+      value: "Choose one option",
       memberOf: "properties",
     },
     options: {
@@ -140,12 +140,12 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
       memberOf: "properties",
       value: {
         1: {
-          value: "Options1",
-          label: "Please Select options 1",
+          value: "Option1",
+          label: "Option 1",
         },
         2: {
-          value: "Options2",
-          label: "Please Select options 2",
+          value: "Option2",
+          label: "Option 2",
         },
       },
     },
@@ -153,17 +153,17 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
   CheckBox: {
     label: {
       type: controlTypes.Text,
-      value: "Radio",
+      value: "Checkboxes",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Radio Placeholder",
+      value: "Select one or more options",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Radio description",
+      value: "Select multiple options",
       memberOf: "properties",
     },
     options: {
@@ -171,12 +171,12 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
       memberOf: "properties",
       value: {
         1: {
-          value: "Options1",
-          label: "Please Select options 1",
+          value: "Option1",
+          label: "Option 1",
         },
         2: {
-          value: "Options2",
-          label: "Please Select options 2",
+          value: "Option2",
+          label: "Option 2",
         },
       },
     },
@@ -184,17 +184,17 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
   OptionsGenerator: {
     label: {
       type: controlTypes.Text,
-      value: "Radio",
+      value: "Options Generator",
       memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
-      value: "Radio Placeholder",
+      value: "Enter option",
       memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
-      value: "Radio description",
+      value: "Custom options generator",
       memberOf: "properties",
     },
     options: {
@@ -202,12 +202,12 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
       memberOf: "properties",
       value: {
         1: {
-          value: "Options1",
-          label: "Please Select options 1",
+          value: "Option1",
+          label: "Option 1",
         },
         2: {
-          value: "Options2",
-          label: "Please Select options 2",
+          value: "Option2",
+          label: "Option 2",
         },
       },
     },
@@ -216,12 +216,12 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
     description: {
       type: "Text",
       memberOf: "properties",
-      value: "Switch",
+      value: "Toggle Switch",
     },
     label: {
       type: "Text",
       memberOf: "properties",
-      value: "Switch",
+      value: "Toggle Switch",
     },
     placeholder: {
       type: "Text",
@@ -245,11 +245,11 @@ export const defaultValidations: ValidationConfig = {
       value: true,
       memberOf: "validations",
     },
-    maxLength: { type: controlTypes.Text, value: 10, memberOf: "validations" },
-    minLength: { type: controlTypes.Text, value: 5, memberOf: "validations" },
-    formateBy: {
+    maxLength: { type: controlTypes.Text, value: 50, memberOf: "validations" },
+    minLength: { type: controlTypes.Text, value: 3, memberOf: "validations" },
+    format: {
       type: controlTypes.Text,
-      value: "^\\S+@\\S+\\.\\S+$",
+      value: "^[a-zA-Z0-9_ ]*$",
       memberOf: "validations",
     },
   },
@@ -259,11 +259,11 @@ export const defaultValidations: ValidationConfig = {
       value: true,
       memberOf: "validations",
     },
-    maxLength: { type: controlTypes.Text, value: 20, memberOf: "validations" },
+    maxLength: { type: controlTypes.Text, value: 200, memberOf: "validations" },
     minLength: { type: controlTypes.Text, value: 10, memberOf: "validations" },
-    formateBy: {
+    format: {
       type: controlTypes.Text,
-      value: "^\\S+@\\S+\\.\\S+$",
+      value: "^[a-zA-Z0-9_ ]*$",
       memberOf: "validations",
     },
   },
@@ -280,7 +280,7 @@ export const defaultValidations: ValidationConfig = {
       value: true,
       memberOf: "validations",
     },
-    maxLength: { type: controlTypes.Text, value: 2, memberOf: "validations" },
+    maxLength: { type: controlTypes.Text, value: 5, memberOf: "validations" },
     minLength: { type: controlTypes.Text, value: 1, memberOf: "validations" },
   },
   OptionsGenerator: {

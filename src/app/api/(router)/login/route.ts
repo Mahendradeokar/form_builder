@@ -47,7 +47,6 @@ export async function POST(request: NextRequest) {
       email,
     }).lean()) as any;
 
-    console.log(user);
     if (!user) {
       return NextResponse.json(
         {

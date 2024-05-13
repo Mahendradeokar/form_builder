@@ -2,6 +2,6 @@
 
 @layer components {
   .sidebarLayout {
-    @apply flex flex-wrap gap-3;
+    @apply flex flex-wrap gap-3 flex-1 overflow-x-auto;
   }
 }

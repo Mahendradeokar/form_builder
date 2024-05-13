@@ -2,12 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { formDetailsSetter, selectForm } from "@/lib/services/form/formSlice";
+import { formDetailsSetter } from "@/lib/services/form/formSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hook";
-import { useCallback, useEffect, useId, useState } from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { ComponentProps, useCallback, useEffect } from "react";
+import { SubmitHandler } from "react-hook-form";
 import {
-  ControlTypes,
   IFormState,
   TFormDetailsSetterAllowedField,
 } from "@/types";
@@ -21,14 +20,16 @@ import { shouldAppend, validate } from "./services/controls";
 import { useFormBuilder } from "./hooks/useFormBuilder";
 import { getApplicableValidations } from "./services/validations";
 
-interface Props {}
+type Props = {
+  preview: boolean;
+} & ComponentProps<"div">;
 
 interface IItem {
   id: string;
   type: "INPUT";
 }
 
-export default function Canvas({}: Props) {
+export default function Canvas({ preview }: Props) {
   // states
   const selected = useAppSelector(getActive);
 
@@ -112,6 +113,25 @@ export default function Canvas({}: Props) {
     [controlConfig, clearErrors, form]
   );
 
+  if (arrayFields.length === 0 && controlConfig.length !== 0) {
+    const fields: Omit<(typeof arrayFields)[0], "id">[] = [];
+    controlConfig.forEach((control) => {
+      let newRecord: Omit<(typeof arrayFields)[0], "id"> = {
+        _id: control._id,
+        value: "",
+      };
+      if (control.type === "CheckBox") {
+        newRecord = {
+          ...newRecord,
+          value: {} as any,
+        };
+      }
+
+      fields.push(newRecord);
+    });
+    append(fields);
+  }
+
   // useEffects
   useEffect(() => {
     const isNew = shouldAppend(arrayFields, controlConfig);
@@ -145,9 +165,10 @@ export default function Canvas({}: Props) {
   }, [controlConfig, append, arrayFields]);
 
   return (
-    <div className="shadow-md my-10 min-w-[35rem] h-full overflow-y-auto p-4 bg-white rounded-md">
+    <div className="shadow-md my-10 w-full max-w-[35rem] overflow-y-auto p-4 m-4 bg-white rounded-md">
       <div className="grid gap-1 mb-4">
         <ElementHandler
+          preview={preview}
           onEdit={() => handleSelect("TITLE")}
           className="shadow-none"
         >
@@ -162,6 +183,7 @@ export default function Canvas({}: Props) {
           />
         </ElementHandler>
         <ElementHandler
+          preview={preview}
           onEdit={() => handleSelect("DESCRIPTION")}
           className="shadow-none"
         >
@@ -179,10 +201,10 @@ export default function Canvas({}: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submit)} className="space-y-2">
           {arrayFields.map(({ _id }, idx: number) => {
-            debugger;
             const { properties, type, validations } = controlConfig[idx];
             return (
               <ElementHandler
+                preview={preview}
                 key={_id}
                 onEdit={() => handleSelect(idx)}
                 onRemove={() => remove(idx)}

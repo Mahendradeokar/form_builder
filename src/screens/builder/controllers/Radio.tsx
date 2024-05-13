@@ -8,7 +8,6 @@ import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { convertComponentOptionsIntoArray } from "../services/controls";
 
 export default function Radio({ field, config }: IControllerProps<"Radio">) {
-  console.log("Radio button", field.value);
   const { options, placeholder } = config;
 
   if (options && typeof options.value === "string") {

@@ -11,12 +11,12 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <div className="h-screen">
-        <StoreProvider>
-          <Header />
+      <StoreProvider>
+        <div className="h-screen flex flex-col">
+          <Header className="grow-0 shrink-0"/>
           <div className={styles.sidebarLayout}>{children}</div>
-        </StoreProvider>
-      </div>
+        </div>
+      </StoreProvider>
     </>
   );
 }

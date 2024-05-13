@@ -40,7 +40,7 @@ export default function Builder() {
       }
       setLoading(false);
     })();
-  }, [dispatch]);
+  }, [dispatch, formId]);
 
   return (
     <>
@@ -51,8 +51,8 @@ export default function Builder() {
           </aside>
         )}
         <main className={styles.mainContent}>
-          <Droppable className="h-full grid place-content-center">
-            {loading ? <Loader /> : <Canvas />}
+          <Droppable className="h-full w-full flex place-content-center">
+            {loading ? <Loader /> : <Canvas preview={Boolean(isPreview)} />}
           </Droppable>
         </main>
       </DndProvider>

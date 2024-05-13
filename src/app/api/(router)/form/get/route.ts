@@ -30,7 +30,6 @@ export async function GET(request: NextRequest) {
       query._id = formId;
     }
     const form = await FormModel.find(query).lean();
-    console.log(form);
     if (!form) {
       return NextResponse.json(
         {
