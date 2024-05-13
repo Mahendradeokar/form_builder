@@ -14,13 +14,19 @@ const initialState: IFormState = {
   name: "Edit Title",
   description: "Edit Description",
   controlConfig: [],
-  validations: {},
 };
 
 const formSlice = createSlice({
   name: "form",
   initialState: initialState,
   reducers: {
+    loadForm(state, action: PayloadAction<IFormState>) {
+      const { name, description, controlConfig } = action.payload;
+      state.name = name;
+      state.description = description;
+      state.controlConfig = controlConfig;
+      return state;
+    },
     addComponent(state, action: PayloadAction<IDropItemData>) {
       const id = generateUniqueId();
       const { type } = action.payload;
@@ -75,6 +81,7 @@ const formSlice = createSlice({
 });
 
 export const {
+  loadForm,
   addComponent,
   formDetailsSetter,
   updateControlConfigByIndex,

@@ -1,15 +1,26 @@
 import { GetValidationParams } from "@/screens/builder/types";
-import { ControlTypes, ValidationType } from "@/types";
+import { ControlTypes, InputValue, ValidationType } from "@/types";
 
-export type ControlProperty = {
+interface baseRenderProperty<TValue extends InputValue = InputValue> {
   type: ControlTypes;
-  value: string;
-  isVisible: boolean;
-};
+  memberOf: "properties" | "validations";
+  value: TValue;
+}
+export interface ControlProperty<TValue extends InputValue = InputValue>
+  extends baseRenderProperty<TValue> {
+  memberOf: "properties";
+}
 
-export type ControlPropertyWithOptions = {
-  value: Options;
-} & Omit<ControlProperty, "value">;
+export interface ControlPropertyWithOptions<TValue extends Options = Options>
+  extends baseRenderProperty {
+  value: TValue;
+  memberOf: "properties";
+}
+
+export interface validationProperty<T extends InputValue = InputValue>
+  extends baseRenderProperty<T> {
+  memberOf: "validations";
+}
 
 interface Options {
   [id: string | number]: {
@@ -20,10 +31,10 @@ interface Options {
 
 export type TControlPropertiesConfig = {
   [key in ControlTypes]: {
-    label: ControlProperty;
-    placeholder: ControlProperty;
-    description: ControlProperty;
-    options?: ControlPropertyWithOptions;
+    label: ControlProperty<string>;
+    placeholder: ControlProperty<string>;
+    description: ControlProperty<string>;
+    options?: ControlPropertyWithOptions<Options>;
   };
 };
 
@@ -35,6 +46,6 @@ export type TCheckBoxPropertiesConfig = TControlPropertiesConfig["CheckBox"];
 
 export type ValidationConfig = {
   [Type in ControlTypes]: {
-    [key in ValidationType]?: GetValidationParams;
+    [key in ValidationType]?: validationProperty<InputValue>;
   };
 };

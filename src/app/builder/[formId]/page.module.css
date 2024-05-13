@@ -1,0 +1,14 @@
+@tailwind components;
+
+@layer components {
+  .sidebar {
+    --sidebar-grow: 1;
+    --min-width: 20rem;
+    @apply hidden xl:block flex-grow-[--sidebar-grow] min-w-[--min-width] p-4 h-full overflow-auto;
+  }
+
+  .mainContent {
+    --main-content-grow: 999;
+    @apply basis-0 flex-grow-[--main-content-grow] min-w-[40%] h-full overflow-y-auto bg-slate-200;
+  }
+}

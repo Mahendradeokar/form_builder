@@ -3,7 +3,12 @@ import { IControllerProps } from "../types";
 import { ControlTypes } from "@/types";
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Fragment } from "react";
-import { objectEntities } from "@/lib/utils";
+import {
+  isArrayType,
+  isObject,
+  isPrimitive,
+  objectEntities,
+} from "@/lib/utils";
 import { convertComponentOptionsIntoArray } from "../services/controls";
 
 export default function Checkbox({
@@ -11,12 +16,22 @@ export default function Checkbox({
   config,
 }: IControllerProps<"CheckBox">) {
   const { options } = config;
+  const { value } = field;
 
-  if (typeof options?.value === "string") {
-    return <p>Something went wrong. Please refresh site.</p>;
+  const REFRESH = <p>Something went wrong. Please refresh site.</p>;
+  if (!isObject(options)) {
+    return REFRESH;
   }
 
-  let ops = convertComponentOptionsIntoArray(options!.value);
+  if (isPrimitive(value)) {
+    return REFRESH;
+  }
+  
+  if (isArrayType(value)) {
+    return REFRESH;
+  }
+
+  let ops = convertComponentOptionsIntoArray(options.value);
   return (
     <>
       <FormItem>
@@ -26,10 +41,10 @@ export default function Checkbox({
               <FormControl>
                 <div className="flex gap-1 leading-none">
                   <CheckBoxScn
-                    checked={ops.value === field.value[ops.id]}
+                    checked={ops.value === value[ops.id]}
                     onCheckedChange={(isSelected) => {
-                      let checkboxState: typeof field.value = {
-                        ...field.value,
+                      let checkboxState: typeof value = {
+                        ...value,
                         [ops.id]: ops.value,
                       };
                       if (isSelected) {

@@ -1,5 +1,4 @@
 import {
-  FormControl,
   FormDescription,
   FormField,
   FormItem,
@@ -7,27 +6,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { controls } from "../services";
-import { ControlTypes, TComponentOptions, TFormControls } from "@/types";
+import {
+  ControlTypes,
+  InputValue,
+  TFormControls,
+} from "@/types";
 import {
   ControllerProps,
   FieldPath,
-  FieldValues,
   UseFormClearErrors,
 } from "react-hook-form";
-import { IComponentConfig } from "../types";
+import { FormElementProperties, IComponentConfig } from "../types";
 import { Ref, forwardRef } from "react";
-import { getValidations } from "../services/validations";
+import {
+  getApplicableValidations,
+} from "../services/validations";
 import { validate } from "../services/controls";
+import { convertToNormalString } from "@/lib/utils";
+import Label from "./Label";
 
 type FormElementProps<
   TFieldValues extends Record<"controls", any>,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   type: ControlTypes;
-  properties: TFormControls["properties"];
+  properties: FormElementProperties;
   name: TName;
   validations?: TFormControls["validations"];
-  clearErrors: UseFormClearErrors<TFieldValues>;
+  clearErrors?: UseFormClearErrors<TFieldValues>;
 } & ControllerProps<TFieldValues, TName>;
 
 const FormElement = <TFormData extends Record<"controls", any>>(
@@ -37,36 +43,47 @@ const FormElement = <TFormData extends Record<"controls", any>>(
     validations,
     control,
     clearErrors,
+    name,
     ...props
   }: Omit<FormElementProps<TFormData>, "render">,
-  ref: Ref<HTMLDivElement>
 ) => {
   const { label, description } = properties;
+
+  // handlers
+  const handlerOnBlur = ({
+    isDirty,
+    value,
+  }: {
+    isDirty: boolean;
+    value: Extract<InputValue, string | Record<any, any>>;
+  }) => {
+    if (isDirty && validations) {
+      const typeOfValue = typeof value === "string" ? "string" : "object";
+      const applicableValidations = getApplicableValidations(validations);
+      const result = validate({
+        validations: applicableValidations,
+        value: value,
+        type: typeOfValue,
+      });
+      if (!result.success) {
+        control?.setError(name, {
+          message: result.message,
+        });
+      } else {
+        clearErrors && clearErrors(name);
+      }
+    }
+  };
   return (
     <FormField
       {...props}
+      name={name}
       render={({ field, fieldState }) => {
-        field.onBlur = () => {
-          if (fieldState.isDirty && validations) {
-            const typeOfValue =
-              typeof field.value === "string" ? "string" : "object";
-            const result = validate({
-              validations,
-              value: field.value,
-              type: typeOfValue,
-            });
-            if (!result.success) {
-              control?.setError(field.name, {
-                message: result.message,
-              });
-            } else {
-              clearErrors && clearErrors(field.name);
-            }
-          }
-        };
+        field.onBlur = () =>
+          handlerOnBlur({ isDirty: fieldState.isDirty, value: field.value });
         return (
           <FormItem>
-            <FormLabel>{label.value}</FormLabel>
+            <Label type={type} label={convertToNormalString(label.value)} />
             {controls.renderControllers({
               type,
               field,

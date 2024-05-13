@@ -13,7 +13,11 @@ export default function Text({ field, config }: IControllerProps<"Text">) {
   return (
     <>
       <FormControl>
-        <Input placeholder={config.placeholder.value} {...field} />
+        <Input
+          placeholder={config.placeholder.value}
+          {...field}
+          value={String(field.value)}
+        />
       </FormControl>
     </>
   );

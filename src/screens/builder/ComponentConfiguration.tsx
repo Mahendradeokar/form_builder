@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect } from "react";
-import { ControlTypes, IFormState } from "@/types";
+import { ControlTypes, IFormState, InputValue, ValidationType } from "@/types";
 import { ObjectValues, isEmpty, objectEntities, showToast } from "@/lib/utils";
 import { getActive } from "@/lib/services/form/controlState";
 import { useFormBuilder } from "./hooks/useFormBuilder";
@@ -27,7 +27,10 @@ import {
   ControlProperty,
   ControlPropertyWithOptions,
   TControlPropertiesConfig,
+  ValidationConfig,
+  validationProperty,
 } from "@/config/types";
+import { FormElementProperties } from "./types";
 
 function getFormControlByIndex(
   idx: number,
@@ -55,26 +58,39 @@ export default function ComponentConfiguration() {
     formFields.controlConfig
   );
 
-  const { properties } = currentControl ?? {};
+  const { properties, validations } = currentControl ?? {};
 
   // handlers
   const handleSave: SubmitHandler<FormDataType> = useCallback(
     (value) => {
-      const updatedProperties = value.controls.reduce((properties, prop) => {
-        const { label, ...rest } = prop;
-        if (isControlProperty(rest) && label !== "options") {
-          properties[label] = { ...rest };
-          return properties;
-        }
+      const updatedProperties = value.controls.reduce(
+        (config, prop) => {
+          const { label, ...rest } = prop;
+          if (isValidations(rest)) {
+            config.validations[label as ValidationType] = rest;
+            return config;
+          }
+          if (isControlPropertyWithOption(rest)) {
+            config.properties.options = rest;
+            return config;
+          }
 
-        properties.options = { ...rest } as ControlPropertyWithOptions;
-        return properties;
-      }, {} as PropertyConfig);
+          config.properties[label as keyof Omit<PropertyConfig, "options">] = {
+            ...rest,
+            value: String(rest.value),
+          };
+          return config;
+        },
+        { properties: {}, validations: {} } as {
+          properties: PropertyConfig;
+          validations: ValidationConfig[ControlTypes];
+        }
+      );
 
       dispatch(
         updateControlConfigByIndex({
           idx: Number(activeIndex),
-          update: { ...currentControl, properties: updatedProperties },
+          update: { ...currentControl, ...updatedProperties },
         })
       );
     },
@@ -84,14 +100,17 @@ export default function ComponentConfiguration() {
   // useEffects
   useEffect(() => {
     if (properties) {
-      const fieldArr = propertiesToArrayFields(properties);
+      const fieldArr = propertiesToArrayFields({
+        ...properties,
+        ...validations,
+      });
       replace(fieldArr);
     }
-  }, [properties, replace]);
+  }, [properties, validations, replace]);
 
   return (
     <div className="space-y-2">
-      <h5 className="text-xl font-bold">Component&apos;s Properties</h5>
+      <h5 className="text-xl font-bold">Properties</h5>
       <div className="grid gap-2">
         {currentControl && !isEmpty(currentControl) ? (
           <Form {...form}>
@@ -99,8 +118,13 @@ export default function ComponentConfiguration() {
               onSubmit={form.handleSubmit(handleSave)}
               className="space-y-2"
             >
-              {arrayFields.map(({ id, value, label }, idx: number) => {
-                const propertyConfig = properties[label];
+              {arrayFields.map(({ id, label, memberOf }, idx: number) => {
+                const elementPropertiesConfig = {
+                  ...validations,
+                  ...properties,
+                };
+                const propertyConfig = elementPropertiesConfig[label];
+
                 if (!propertyConfig) {
                   return null;
                 }
@@ -132,37 +156,46 @@ export default function ComponentConfiguration() {
   );
 }
 
+// Types
 type PropertyConfig = TControlPropertiesConfig[ControlTypes];
 type FormDataType = {
   controls: (
-    | (ControlProperty & { label: keyof PropertyConfig })
+    | (ControlProperty<Exclude<InputValue, any[] | Record<any, any>>> & {
+        label: keyof PropertyConfig;
+      })
     | (ControlPropertyWithOptions & {
         label: keyof PropertyConfig;
+      })
+    | (validationProperty<Exclude<InputValue, any[] | Record<any, any>>> & {
+        label: ValidationType;
       })
   )[];
 };
 
-type PropertiesExtraFields = { label: keyof PropertyConfig };
 type propertiesToArrayFieldsReturnType = (
-  | (ControlProperty & PropertiesExtraFields)
-  | (ControlPropertyWithOptions & PropertiesExtraFields)
+  | (ControlProperty<Exclude<InputValue, any[] | Record<any, any>>> & {
+      label: keyof PropertyConfig;
+    })
+  | (ControlPropertyWithOptions & {
+      label: keyof PropertyConfig;
+    })
+  | (validationProperty<Exclude<InputValue, any[] | Record<any, any>>> & {
+      label: ValidationType;
+    })
 )[];
 
-const propertiesToArrayFields = <TData extends PropertyConfig = PropertyConfig>(
+// Helpers
+const propertiesToArrayFields = <
+  TData extends PropertyConfig & ValidationConfig[ControlTypes]
+>(
   obj: TData
 ): propertiesToArrayFieldsReturnType => {
   const arrayData = objectEntities(obj).map(([label, values]) => {
     if (values) {
-      if (!isControlProperty(values)) {
-        return {
-          ...values,
-          label,
-        } as ControlPropertyWithOptions & PropertiesExtraFields;
-      }
       return {
         ...values,
         label,
-      } as ControlProperty & PropertiesExtraFields;
+      } as propertiesToArrayFieldsReturnType[number];
     }
     return null;
   });
@@ -171,34 +204,53 @@ const propertiesToArrayFields = <TData extends PropertyConfig = PropertyConfig>(
 };
 
 const transformPropertyConfig = (
-  config:
-    | (ControlProperty & PropertiesExtraFields)
-    | (ControlPropertyWithOptions & PropertiesExtraFields)
-): PropertyConfig => {
-  let placeholder = "";
+  config: (
+    | ControlProperty<InputValue>
+    | ControlPropertyWithOptions
+    | validationProperty<InputValue>
+  ) & { label: ValidationType | keyof PropertyConfig }
+): FormElementProperties => {
+  let placeholder = "Enter....";
   let options = undefined;
 
-  if (isControlProperty(config)) {
-    placeholder = config.value;
-  } else {
+  if (isControlPropertyWithOption(config)) {
     options = config.value;
+  } else if (!isValidations(config)) {
+    placeholder = String(config.value);
   }
+  const baseProp = {
+    type: "Text" as const,
+    memberOf: config.memberOf,
+  };
   return {
-    label: { value: config.label, type: "Text", isVisible: true },
-    placeholder: {
-      value: placeholder,
-      type: "Text",
-      isVisible: true,
+    label: {
+      ...baseProp,
+      value: config.label,
     },
-    description: { value: "", type: "Text", isVisible: true },
+    placeholder: {
+      ...baseProp,
+      value: placeholder,
+    },
+    description: { ...baseProp, value: "" },
     options: options
-      ? { value: options, isVisible: true, type: "DropDown" }
+      ? {
+          ...baseProp,
+          memberOf: "properties",
+          value: options,
+          type: "DropDown",
+        }
       : undefined,
   };
 };
 
-const isControlProperty = (
-  options: ControlProperty | ControlPropertyWithOptions
-): options is ControlProperty => {
-  return typeof options.value === "string";
+const isControlPropertyWithOption = (
+  options: ControlProperty | ControlPropertyWithOptions | validationProperty
+): options is ControlPropertyWithOptions => {
+  return typeof options.value === "object";
+};
+
+const isValidations = (
+  options: ControlProperty | ControlPropertyWithOptions | validationProperty
+): options is validationProperty => {
+  return options.memberOf === "validations";
 };

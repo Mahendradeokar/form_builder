@@ -8,6 +8,7 @@ import ControllersIcons from "../controllers/icons";
 import Controllers from "../controllers";
 import { ComponentProps } from "react";
 import {
+  FormElementProperties,
   FormValues,
   IComponentConfig,
   TFormControllerRenderProps,
@@ -23,7 +24,7 @@ type TControlType = keyof typeof ControllersIcons & ControlTypes;
 interface IRenderControllers<T extends ControlTypes> {
   type: T;
   field: TFormControllerRenderProps<T> | any;
-  config: TFormControls<T>["properties"];
+  config: FormElementProperties;
 }
 
 interface ValidateArg {
@@ -49,7 +50,10 @@ export const shouldAppend = (
   controlConfig: IFormState["controlConfig"]
 ) => {
   const isNewEntry = controlConfig.every(({ _id: controllerId }) => {
-    return field.some(({ _id: fieldId }) => fieldId === controllerId);
+    return field.some(({ _id: fieldId }) => {
+      console.log(controllerId, fieldId);
+      return fieldId === controllerId;
+    });
   });
 
   return !isNewEntry;

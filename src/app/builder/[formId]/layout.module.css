@@ -1,0 +1,7 @@
+@tailwind components;
+
+@layer components {
+  .sidebarLayout {
+    @apply flex flex-wrap gap-3;
+  }
+}

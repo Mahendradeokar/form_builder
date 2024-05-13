@@ -1,7 +1,13 @@
-export default function Home() {
+import FormList from "@/screens/home/component/FormList";
+import HomePageHeader from "@/screens/home/component/header";
+
+export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Main Page
-    </main>
+    <>
+      <HomePageHeader />
+      <main className="max-w-[60rem] mx-auto">
+        <FormList />
+      </main>
+    </>
   );
 }

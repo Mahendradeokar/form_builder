@@ -16,9 +16,10 @@ import { FormElement } from "./controllers";
 import { FormValues } from "./types";
 import ElementHandler from "./components/ElementHandler";
 import { getActive, setActive } from "@/lib/services/form/controlState";
-import { showToast } from "@/lib/utils";
+import { convertToString, isPrimitive, showToast } from "@/lib/utils";
 import { shouldAppend, validate } from "./services/controls";
 import { useFormBuilder } from "./hooks/useFormBuilder";
+import { getApplicableValidations } from "./services/validations";
 
 interface Props {}
 
@@ -36,6 +37,7 @@ export default function Canvas({}: Props) {
     formFields,
     arrayFields,
     append,
+    replace,
     move,
     remove,
     formMethod: form,
@@ -63,18 +65,27 @@ export default function Canvas({}: Props) {
   const submit: SubmitHandler<FormValues> = useCallback(
     (value) => {
       let isErrors = false;
-      debugger;
       value.controls.forEach((field, idx: number) => {
         const CConfig = findControlConfigById(field._id, controlConfig);
+
         if (CConfig?.validations) {
-          const validations = CConfig.validations;
+          const validations = getApplicableValidations(CConfig.validations);
           const typeOfValue =
             typeof field.value === "string" ? "string" : "object";
+          let safeTypeValue;
+
+          if (isPrimitive(field.value)) {
+            safeTypeValue = convertToString(field.value);
+          } else {
+            safeTypeValue = field.value;
+          }
+
           const result = validate({
             validations,
-            value: field.value,
+            value: safeTypeValue,
             type: typeOfValue,
           });
+
           const fieldName = `controls.${idx}.value` as const;
           if (!result.success) {
             isErrors = true;
@@ -98,7 +109,7 @@ export default function Canvas({}: Props) {
         });
       }
     },
-    [controlConfig]
+    [controlConfig, clearErrors, form]
   );
 
   // useEffects
@@ -117,8 +128,16 @@ export default function Canvas({}: Props) {
         if (control.type === "CheckBox") {
           newRecord = {
             ...newRecord,
-            value: {},
+            value: {} as any,
           };
+        }
+
+        const isExists = arrayFields.find(
+          ({ _id: fieldId }) => fieldId === newRecord._id
+        );
+
+        if (isExists) {
+          return;
         }
         append(newRecord);
       }
@@ -126,7 +145,7 @@ export default function Canvas({}: Props) {
   }, [controlConfig, append, arrayFields]);
 
   return (
-    <div className="shadow-md my-10 min-w-[35rem] overflow-y-auto p-4 bg-white rounded-md">
+    <div className="shadow-md my-10 min-w-[35rem] h-full overflow-y-auto p-4 bg-white rounded-md">
       <div className="grid gap-1 mb-4">
         <ElementHandler
           onEdit={() => handleSelect("TITLE")}
@@ -160,12 +179,14 @@ export default function Canvas({}: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submit)} className="space-y-2">
           {arrayFields.map(({ _id }, idx: number) => {
+            debugger;
             const { properties, type, validations } = controlConfig[idx];
             return (
               <ElementHandler
                 key={_id}
                 onEdit={() => handleSelect(idx)}
                 onRemove={() => remove(idx)}
+                onMove={move}
                 index={idx}
               >
                 <FormElement<FormValues>

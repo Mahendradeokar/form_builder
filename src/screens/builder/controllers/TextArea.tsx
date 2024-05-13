@@ -19,6 +19,7 @@ export default function TextArea({
           placeholder={config.placeholder.value}
           className="resize-none"
           {...field}
+          value={String(field.value)}
         />
       </FormControl>
     </>

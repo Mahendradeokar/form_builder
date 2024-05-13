@@ -1,5 +1,6 @@
 import {
   ControlTypes,
+  InputValue,
   TComponentOptions,
   TFormControls,
   ValidationType,
@@ -12,24 +13,29 @@ import {
 } from "react-hook-form";
 import { StringValidationType } from "./services/validations/string";
 import { ObjectValidationType } from "./services/validations/object";
+import {
+  ControlProperty,
+  ControlPropertyWithOptions,
+  validationProperty,
+} from "@/config/types";
 
 interface FormValuesWithObjectType {
   controls: {
     _id: string;
-    value: { [optionId: string]: string };
+    value: Record<string, any>;
   }[];
 }
-export interface FormValuesWithStringType {
+export interface FormValuesWithPrimitives {
   controls: {
     _id: string;
-    value: string;
+    value: Exclude<InputValue, Record<any, any> | any[]>;
   }[];
 }
 
 export type FormValues = {
   controls: {
     _id: string;
-    value: string | { [optionId: string]: string };
+    value: Exclude<InputValue, any[] | Record<any, any>>;
   }[];
 };
 export type TFormControllerRenderProps<T extends ControlTypes = ControlTypes> =
@@ -39,7 +45,7 @@ export type TFormControllerRenderProps<T extends ControlTypes = ControlTypes> =
         `controls.${number}.value`
       >
     : ControllerRenderProps<
-        FormValuesWithStringType,
+        FormValuesWithPrimitives,
         `controls.${number}.value`
       >;
 
@@ -49,9 +55,16 @@ export interface IComponentConfig {
 
 export interface IControllerProps<T extends ControlTypes> {
   field: TFormControllerRenderProps<T>;
-  config: TFormControls<T>["properties"];
+  config: FormElementProperties;
 }
 
 export type GetValidationParams =
   | Parameters<StringValidationType[ValidationType]>[1]
   | Parameters<ObjectValidationType[ValidationType]>[1];
+
+export type FormElementProperties = {
+  label: ControlProperty<string> | validationProperty<string>;
+  description: ControlProperty<string> | validationProperty<string>;
+  placeholder: ControlProperty<string> | validationProperty<string>;
+  options?: ControlPropertyWithOptions | undefined;
+};

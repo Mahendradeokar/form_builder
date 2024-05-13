@@ -41,27 +41,31 @@ interface Component<T extends ControlTypes> {
   componentName: string;
   componentId: number;
 }
-
-interface Text extends Component<"Text"> {}
-interface TextArea extends Component<"TextArea"> {}
-
+export type InputValue = string | boolean | number | Record<any, any> | any[];
 export type TComponentOptions = {
   label: string;
-  value: string;
+  value: InputValue;
   id: string;
 };
+
+interface TextArea extends Component<"TextArea"> {}
+interface Text extends Component<"Text"> {}
 interface DropDown extends Component<"DropDown"> {
   options: TComponentOptions[];
   placeHolder: string;
 }
-
 export interface IRadio extends Component<"Radio"> {
   options: TComponentOptions[];
 }
-
-export interface ICheckBox extends Component<"CheckBox"> {}
-
-export type Components = Text | DropDown | TextArea | IRadio | ICheckBox;
+export interface CheckBox extends Component<"CheckBox"> {}
+export interface Switch extends Component<"Switch"> {}
+export type Components =
+  | Text
+  | DropDown
+  | TextArea
+  | IRadio
+  | CheckBox
+  | Switch;
 
 export type TElementConfig = {
   [Properties in keyof Components as Properties extends
@@ -87,7 +91,6 @@ export interface IFormState {
   name: string;
   description: string;
   controlConfig: TFormControls<ControlTypes>[];
-  validations: ValidationConfig[ControlTypes];
 }
 
 export type TFormDetailsSetterAllowedField = keyof Pick<

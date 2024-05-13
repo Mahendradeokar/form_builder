@@ -7,7 +7,7 @@ import { controls } from "./services";
 export default function ComponentHolder() {
   return (
     <div className="space-y-2">
-      <h5 className="text-xl font-bold">Component&apos;s</h5>
+      <h5 className="text-xl font-bold">Controls</h5>
       <div className="grid gap-2 grid-cols-2">
         {elementConfig.map(({ componentId, componentType }) => {
           return (

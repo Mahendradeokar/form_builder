@@ -1,8 +1,10 @@
 import { toast } from "@/components/ui/use-toast";
+import { InputValue } from "@/types";
 import { nanoid } from "@reduxjs/toolkit";
 import { type ClassValue, clsx } from "clsx";
 import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
+import { InputType } from "zlib";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -65,3 +67,35 @@ export function fixedForwardRef<T, P = {}>(
 ): (props: P & React.RefAttributes<T>) => React.ReactNode {
   return forwardRef(render) as any;
 }
+
+export const isPrimitive = (value: any): value is string | number | boolean => {
+  return typeof value !== "object";
+};
+
+export const isArrayType = (arr: any): arr is Array<any> => Array.isArray(arr);
+
+export const isObject = (obj: any): obj is Record<any, any> => {
+  return obj !== null && typeof obj === "object";
+};
+
+export const convertToString = (val: string | number | boolean): string => {
+  const type = typeof val;
+
+  switch (type) {
+    case "string":
+      return String(val);
+    case "boolean":
+      return val ? String(val) : "";
+    case "number":
+      return String(val);
+    default:
+      throw new Error("Type mismatch...");
+  }
+};
+
+// Regular expression to match camelCase, snake_case, kebab-case.
+const regex = /([a-z])([A-Z])|[_-]+/g;
+export const convertToNormalString = (str: string) => {
+  let normalString = str.replace(regex, "$1 $2").toLowerCase();
+  return normalString.charAt(0).toUpperCase() + normalString.slice(1);
+};

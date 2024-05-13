@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/lib/hook";
-import { removeControl, selectForm } from "@/lib/services/form/formSlice";
-import { useCallback } from "react";
+import {
+  moveControl,
+  removeControl,
+  selectForm,
+} from "@/lib/services/form/formSlice";
+import { useCallback, useEffect } from "react";
 import {
   ArrayPath,
   FieldArray,
@@ -52,10 +56,16 @@ export function useFormBuilder<TFormData extends Values>() {
 
   const move = useCallback(
     ({ from, to }: { from: number; to: number }) => {
-      return moveField(from, to);
+      debugger;
+      dispatch(moveControl({ from, to }));
+      moveField(from, to);
     },
-    [moveField]
+    [moveField, dispatch]
   );
+
+  useEffect(() => {
+    console.log(fields);
+  }, [fields]);
 
   const replace = useCallback(
     (arg: InsertDataType<TFormData>) => {

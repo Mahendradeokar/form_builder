@@ -9,6 +9,7 @@ export const controlTypes = {
   Radio: "Radio",
   CheckBox: "CheckBox",
   OptionsGenerator: "OptionsGenerator",
+  Switch: "Switch",
 } as const;
 
 export const validationsType = {
@@ -44,6 +45,11 @@ export const elementConfig: readonly TElementConfig[] = [
     componentType: "CheckBox",
     componentId: 5,
   },
+  {
+    componentName: "Switch",
+    componentType: "Switch",
+    componentId: 6,
+  },
 ];
 
 export const controlPropertiesConfig: TControlPropertiesConfig = {
@@ -51,21 +57,21 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
     label: {
       type: controlTypes.Text,
       value: "Drop down",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Drop down Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Drop down description",
-      isVisible: true,
+      memberOf: "properties",
     },
     options: {
       type: "OptionsGenerator",
-      isVisible: true,
+      memberOf: "properties",
       value: {
         1: {
           value: "Options1",
@@ -82,34 +88,34 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
     label: {
       type: controlTypes.Text,
       value: "Text",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Text Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Text description",
-      isVisible: true,
+      memberOf: "properties",
     },
   },
   TextArea: {
     label: {
       type: controlTypes.Text,
       value: "Text area",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Text area Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Text area description",
-      isVisible: true,
+      memberOf: "properties",
     },
   },
 
@@ -117,20 +123,21 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
     label: {
       type: controlTypes.Text,
       value: "Radio",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Radio Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Radio description",
-      isVisible: true,
+      memberOf: "properties",
     },
     options: {
       type: "OptionsGenerator",
+      memberOf: "properties",
       value: {
         1: {
           value: "Options1",
@@ -141,27 +148,27 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
           label: "Please Select options 2",
         },
       },
-      isVisible: true,
     },
   },
   CheckBox: {
     label: {
       type: controlTypes.Text,
       value: "Radio",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Radio Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Radio description",
-      isVisible: true,
+      memberOf: "properties",
     },
     options: {
       type: "OptionsGenerator",
+      memberOf: "properties",
       value: {
         1: {
           value: "Options1",
@@ -172,27 +179,27 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
           label: "Please Select options 2",
         },
       },
-      isVisible: true,
     },
   },
   OptionsGenerator: {
     label: {
       type: controlTypes.Text,
       value: "Radio",
-      isVisible: true,
+      memberOf: "properties",
     },
     placeholder: {
       type: controlTypes.Text,
       value: "Radio Placeholder",
-      isVisible: true,
+      memberOf: "properties",
     },
     description: {
       type: controlTypes.Text,
       value: "Radio description",
-      isVisible: true,
+      memberOf: "properties",
     },
     options: {
       type: "OptionsGenerator",
+      memberOf: "properties",
       value: {
         1: {
           value: "Options1",
@@ -203,26 +210,91 @@ export const controlPropertiesConfig: TControlPropertiesConfig = {
           label: "Please Select options 2",
         },
       },
-      isVisible: true,
+    },
+  },
+  Switch: {
+    description: {
+      type: "Text",
+      memberOf: "properties",
+      value: "Switch",
+    },
+    label: {
+      type: "Text",
+      memberOf: "properties",
+      value: "Switch",
+    },
+    placeholder: {
+      type: "Text",
+      memberOf: "properties",
+      value: "Switch",
     },
   },
 };
 
 export const defaultValidations: ValidationConfig = {
-  DropDown: { isRequired: true },
+  DropDown: {
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+  },
   Text: {
-    isRequired: true,
-    maxLength: 10,
-    minLength: 5,
-    formateBy: "^\\S+@\\S+\\.\\S+$",
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+    maxLength: { type: controlTypes.Text, value: 10, memberOf: "validations" },
+    minLength: { type: controlTypes.Text, value: 5, memberOf: "validations" },
+    formateBy: {
+      type: controlTypes.Text,
+      value: "^\\S+@\\S+\\.\\S+$",
+      memberOf: "validations",
+    },
   },
   TextArea: {
-    isRequired: true,
-    maxLength: 20,
-    minLength: 10,
-    formateBy: "^\\S+@\\S+\\.\\S+$",
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+    maxLength: { type: controlTypes.Text, value: 20, memberOf: "validations" },
+    minLength: { type: controlTypes.Text, value: 10, memberOf: "validations" },
+    formateBy: {
+      type: controlTypes.Text,
+      value: "^\\S+@\\S+\\.\\S+$",
+      memberOf: "validations",
+    },
   },
-  Radio: { isRequired: true },
-  CheckBox: { isRequired: true, minLength: 1, maxLength: 2 },
-  OptionsGenerator: { isRequired: true },
+  Radio: {
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+  },
+  CheckBox: {
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+    maxLength: { type: controlTypes.Text, value: 2, memberOf: "validations" },
+    minLength: { type: controlTypes.Text, value: 1, memberOf: "validations" },
+  },
+  OptionsGenerator: {
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+  },
+  Switch: {
+    isRequired: {
+      type: controlTypes.Switch,
+      value: true,
+      memberOf: "validations",
+    },
+  },
 };

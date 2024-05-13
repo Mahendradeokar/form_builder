@@ -3,6 +3,7 @@ import {
   CursorTextIcon,
   DropdownMenuIcon,
   RadiobuttonIcon,
+  SwitchIcon,
   TextIcon,
 } from "@radix-ui/react-icons";
 import Wrapper from "./wrapper";
@@ -44,12 +45,17 @@ const CheckBox = () => {
   );
 };
 
+const Switch = () => {
+  return <Wrapper icon={<SwitchIcon height={30} width={30} />} name="Switch" />;
+};
+
 const FormElementsIcons = {
   Text: Text,
   TextArea: TextArea,
   DropDown: DropDown,
   Radio: Radio,
   CheckBox: CheckBox,
+  Switch: Switch,
 };
 
 export default FormElementsIcons;

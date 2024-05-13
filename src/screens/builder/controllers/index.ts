@@ -6,6 +6,7 @@ import Radio from "./Radio";
 import Checkbox from "./Checkbox";
 import { IControllerProps } from "../types";
 import OptionsGenerator from "./OptionsGenerator";
+import Switch from "./Switch";
 export { default as FormElement } from "./FormElement";
 
 type Controller<T extends ControlTypes> = (
@@ -21,6 +22,7 @@ const Controllers: {
   Radio: Radio,
   CheckBox: Checkbox,
   OptionsGenerator: OptionsGenerator,
+  Switch: Switch,
 };
 
 export default Controllers;

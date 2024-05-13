@@ -7,6 +7,7 @@ import { ControlTypes, IDropItemData } from "@/types";
 import { ComponentProps, Ref, useId } from "react";
 import { useDrop } from "react-dnd";
 import { controlTypes } from "@/config/formConfig";
+import { setActive } from "@/lib/services/form/controlState";
 
 type Props = {
   children: React.ReactNode;

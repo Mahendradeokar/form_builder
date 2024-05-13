@@ -37,7 +37,7 @@ const Icons = fixedForwardRef(
 interface Props extends ComponentProps<"div"> {
   index?: number;
   onEdit: () => void;
-  onMove?: () => void;
+  onMove?: (arg: { from: number; to: number }) => void;
   onRemove?: () => void;
 }
 
@@ -48,9 +48,9 @@ export default function ElementHandler({
   children,
   onEdit,
   onRemove,
+  onMove,
   className,
 }: Props) {
-  const dispatch = useAppDispatch();
   const [{ isDragging }, drag] = useDrag(() => ({
     type: DRAG_TYPE,
     item: {
@@ -64,14 +64,17 @@ export default function ElementHandler({
   const [__, drop] = useDrop(() => ({
     accept: DRAG_TYPE,
     drop: (item: ItemSchema) => {
-      const itemIdx = item.index;
-      const currentIdx = index;
+      const itemIdx = Number(item.index);
+      const currentIdx = Number(index);
 
-      if (currentIdx && itemIdx === currentIdx) {
+      if (currentIdx === undefined && currentIdx === null) {
+        return;
+      }
+      if (itemIdx === currentIdx) {
         return;
       }
 
-      dispatch(moveControl({ from: itemIdx, to: currentIdx! }));
+      onMove && onMove({ from: itemIdx, to: currentIdx });
     },
   }));
 
