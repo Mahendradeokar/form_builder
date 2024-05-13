@@ -5,7 +5,7 @@ export default async function Home() {
   return (
     <>
       <HomePageHeader />
-      <main className="max-w-[60rem] mx-auto">
+      <main className="max-w-[30rem] mx-auto">
         <FormList />
       </main>
     </>

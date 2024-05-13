@@ -11,12 +11,12 @@ export default function HomePageHeader() {
       </Link>
       <div className="flex justify-end flex-wrap gap-4 px-5">
         <div className="flex items-center gap-1">
-          <Link href="/signup">
+          {/* <Link href="/signup">
             <Button size={"lg"}>SignUp</Button>
           </Link>
           <Link href="/login">
             <Button size={"lg"}>Login</Button>
-          </Link>
+          </Link> */}
           <Link href="/builder/add">
             <Button size={"lg"}>Create Form</Button>
           </Link>

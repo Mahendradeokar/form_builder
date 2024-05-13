@@ -1,31 +1,72 @@
 "use client";
 
 import Loader from "@/components/ui/Loader";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { getForm } from "@/lib/requests/form";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { ComponentProps, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+interface FormData {
+  name: string;
+  _id: string;
+}
+
+const columns: ColumnDef<FormData>[] = [
+  {
+    id: "Index",
+    header: "Sr no",
+    cell: ({ column }) => <p>{column.getIndex() + 1}</p>,
+  },
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => <p>{row.getValue("name")}</p>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <Button asChild>
+        <Link href={`/builder/${row.getValue("_id")}`}>Edit</Link>
+      </Button>
+    ),
+  },
+];
 
 export default function FormList(props: ComponentProps<"div">) {
   const [formData, setFormData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const table = useReactTable({
+    columns,
+    data: formData,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const { data } = await getForm();
-      setFormData(data as any[]);
+      const { data, isSuccess } = await getForm();
+      if (isSuccess) {
+        setFormData(data as any[]);
+      }
       setLoading(false);
     })();
   }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center">
@@ -34,38 +75,56 @@ export default function FormList(props: ComponentProps<"div">) {
     );
   }
 
-  if (!formData.length) {
-    return (
-      <div className="flex justify-center items-center">
-        <p className="text-xl">
-          You have not created any form yet. Please create one!
-        </p>
-      </div>
-    );
-  }
   return (
-    <div className="justify-center items-center gap-3 grid grid-cols-2 md:grid-cols-4 min-h-screen place-content-center p-24 align-middle">
-      {formData.map((form) => {
-        return (
-          <Card
-            key={form._id}
-            className={cn(
-              "w-[150px] h-[150px] flex flex-col justify-between",
-              props.className
-            )}
-            {...props}
-          >
-            <CardHeader>
-              <CardTitle>{form.name}</CardTitle>
-            </CardHeader>
-            <CardFooter>
-              <Link href={`builder/${form._id}`}>
-                <Button className="w-full">Edit</Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        );
-      })}
-    </div>
+    <>
+      <div className="space-y-3">
+        <h2 className="text-3xl">Form List</h2>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    You have not created any form yet. Please create one.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </>
   );
 }
