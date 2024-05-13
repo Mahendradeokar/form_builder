@@ -247,7 +247,7 @@ export const defaultValidations: ValidationConfig = {
     },
     maxLength: { type: controlTypes.Text, value: 50, memberOf: "validations" },
     minLength: { type: controlTypes.Text, value: 3, memberOf: "validations" },
-    format: {
+    formateBy: {
       type: controlTypes.Text,
       value: "^[a-zA-Z0-9_ ]*$",
       memberOf: "validations",
@@ -261,7 +261,7 @@ export const defaultValidations: ValidationConfig = {
     },
     maxLength: { type: controlTypes.Text, value: 200, memberOf: "validations" },
     minLength: { type: controlTypes.Text, value: 10, memberOf: "validations" },
-    format: {
+    formateBy: {
       type: controlTypes.Text,
       value: "^[a-zA-Z0-9_ ]*$",
       memberOf: "validations",
