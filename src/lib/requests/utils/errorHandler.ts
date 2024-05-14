@@ -24,6 +24,7 @@ export default function errorHandler(
   }
 
   if (options.showNotification) {
+    console.log(message, defaultMsg.title);
     toast({
       description: message ?? responseMessage?.default?.message,
       title: defaultMsg?.title,

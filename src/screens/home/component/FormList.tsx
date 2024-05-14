@@ -34,13 +34,16 @@ const columns: ColumnDef<FormData>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ row }) => <p>{row.getValue("name")}</p>,
+    cell: ({ row }) => {
+      debugger;
+      return <p>{row.getValue("name")}</p>
+    },
   },
   {
     id: "actions",
     cell: ({ row }) => (
       <Button asChild>
-        <Link href={`/builder/${row.getValue("_id")}`}>Edit</Link>
+        <Link href={`/builder/${row.original._id}`}>Edit</Link>
       </Button>
     ),
   },
@@ -50,7 +53,7 @@ export default function FormList(props: ComponentProps<"div">) {
   const [formData, setFormData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const table = useReactTable({
+  const table = useReactTable<FormData>({
     columns,
     data: formData,
     getCoreRowModel: getCoreRowModel(),
@@ -60,6 +63,7 @@ export default function FormList(props: ComponentProps<"div">) {
     (async () => {
       setLoading(true);
       const { data, isSuccess } = await getForm();
+      // console.log(data)
       if (isSuccess) {
         setFormData(data as any[]);
       }
@@ -101,14 +105,17 @@ export default function FormList(props: ComponentProps<"div">) {
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      console.log(cell.id, cell)
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 ))
               ) : (
