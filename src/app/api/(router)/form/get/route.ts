@@ -16,16 +16,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           message: "Not authenticated",
-          statusCode: StatusCodes.BAD_REQUEST,
+          statusCode: StatusCodes.UNAUTHORIZED,
           data: null,
         },
         {
-          status: StatusCodes.BAD_REQUEST,
+          status: StatusCodes.UNAUTHORIZED,
         }
       );
     }
-    const payload = await getTokenData(token);
-    const query: { userId: string; _id?: string } = { userId: payload.user_id };
+
+    let payload: Partial<Awaited<ReturnType<typeof getTokenData>>> = {};
+    try {
+      payload = await getTokenData(token);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          message: "Unauthorized user.",
+          statusCode: StatusCodes.UNAUTHORIZED,
+          data: null,
+        },
+        {
+          status: StatusCodes.UNAUTHORIZED,
+        }
+      );
+    }
+
+    const query: { userId: string; _id?: string } = { userId: payload.user_id! };
     if (formId) {
       query._id = formId;
     }

@@ -109,48 +109,50 @@ export default function ComponentConfiguration() {
   }, [properties, validations, replace]);
 
   return (
-    <div className="space-y-2">
-      <h5 className="text-xl font-bold">Properties</h5>
-      <div className="grid gap-2">
-        {currentControl && !isEmpty(currentControl) ? (
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSave)}
-              className="space-y-2"
-            >
-              {arrayFields.map(({ id, label, memberOf }, idx: number) => {
-                const elementPropertiesConfig = {
-                  ...validations,
-                  ...properties,
-                };
-                const propertyConfig = elementPropertiesConfig[label];
+    <div className="overflow-hidden">
+      <div className="space-y-2 overflow-auto">
+        <h5 className="text-xl font-bold">Properties</h5>
+        <div className="grid gap-2">
+          {currentControl && !isEmpty(currentControl) ? (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSave)}
+                className="space-y-2"
+              >
+                {arrayFields.map(({ id, label, memberOf }, idx: number) => {
+                  const elementPropertiesConfig = {
+                    ...validations,
+                    ...properties,
+                  };
+                  const propertyConfig = elementPropertiesConfig[label];
 
-                if (!propertyConfig) {
-                  return null;
-                }
-                const { type } = propertyConfig;
-                const config = transformPropertyConfig({
-                  ...propertyConfig,
-                  label,
-                });
-                return (
-                  <FormElement<FormDataType>
-                    key={id}
-                    name={`controls.${idx}.value` as const}
-                    type={type}
-                    properties={config}
-                    control={form.control}
-                  />
-                );
-              })}
-              <Button type="submit" size={"lg"} className="w-full">
-                Save
-              </Button>
-            </form>
-          </Form>
-        ) : (
-          <SweetMessage />
-        )}
+                  if (!propertyConfig) {
+                    return null;
+                  }
+                  const { type } = propertyConfig;
+                  const config = transformPropertyConfig({
+                    ...propertyConfig,
+                    label,
+                  });
+                  return (
+                    <FormElement<FormDataType>
+                      key={id}
+                      name={`controls.${idx}.value` as const}
+                      type={type}
+                      properties={config}
+                      control={form.control}
+                    />
+                  );
+                })}
+                <Button type="submit" size={"lg"} className="w-full">
+                  Save
+                </Button>
+              </form>
+            </Form>
+          ) : (
+            <SweetMessage />
+          )}
+        </div>
       </div>
     </div>
   );
