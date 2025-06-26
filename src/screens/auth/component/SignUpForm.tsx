@@ -91,7 +91,11 @@ function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          loading={form.formState.isSubmitting}
+        >
           Sign up
         </Button>
       </form>

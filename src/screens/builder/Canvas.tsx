@@ -6,10 +6,7 @@ import { formDetailsSetter } from "@/lib/services/form/formSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hook";
 import { ComponentProps, useCallback, useEffect } from "react";
 import { SubmitHandler } from "react-hook-form";
-import {
-  IFormState,
-  TFormDetailsSetterAllowedField,
-} from "@/types";
+import { IFormState, TFormDetailsSetterAllowedField } from "@/types";
 import ContentEditable from "@/components/contentEditable";
 import { FormElement } from "./controllers";
 import { FormValues } from "./types";

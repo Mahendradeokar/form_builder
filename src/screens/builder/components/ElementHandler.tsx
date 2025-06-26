@@ -91,7 +91,7 @@ export default function ElementHandler({
         className={cn("relative shadow-md  rounded-sm p-4 group", className)}
         ref={index !== undefined ? droppable : undefined}
       >
-        {!preview && (
+        {!preview && ( 
           <div className="absolute top-[-10] right-0 hidden gap-2 group-hover:flex">
             <Icons Icon={MoveIcon} />
             <Icons Icon={Pencil1Icon} onClick={onEdit} />

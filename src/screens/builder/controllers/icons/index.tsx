@@ -7,7 +7,6 @@ import {
   TextIcon,
 } from "@radix-ui/react-icons";
 import Wrapper from "./wrapper";
-import { ControlTypes } from "@/types";
 
 const Text = () => {
   return (
@@ -23,7 +22,7 @@ const TextArea = () => {
 
 const DropDown = () => {
   return (
-    <Wrapper
+    <Wrapper  
       icon={<DropdownMenuIcon height={30} width={30} />}
       name="Drop Down"
     />
