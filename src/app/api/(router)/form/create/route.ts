@@ -16,6 +16,36 @@ type ReqBody = z.infer<typeof reqBodySchema>;
 export async function POST(request: NextRequest) {
   try {
     await mongooseConnection();
+    const token = request.cookies.get("token")?.value;
+    if (!token) {
+      return NextResponse.json(
+        {
+          message: "User not authenticated",
+          statusCode: StatusCodes.UNAUTHORIZED,
+          data: null,
+        },
+        {
+          status: StatusCodes.UNAUTHORIZED,
+        }
+      );
+    }
+
+    let payload: Partial<Awaited<ReturnType<typeof getTokenData>>> = {};
+    try {
+      payload = await getTokenData(token);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          message: "Unauthorized user.",
+          statusCode: StatusCodes.UNAUTHORIZED,
+          data: null,
+        },
+        {
+          status: StatusCodes.UNAUTHORIZED,
+        }
+      );
+    }
+
     const reqBody = (await request.json()) as ReqBody;
 
     const validate = reqBodySchema.safeParse(reqBody);
@@ -33,20 +63,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-      return NextResponse.json(
-        {
-          message: "User not authenticated",
-          statusCode: StatusCodes.BAD_REQUEST,
-          data: null,
-        },
-        {
-          status: StatusCodes.BAD_REQUEST,
-        }
-      );
-    }
-    const payload = await getTokenData(token);
 
     const form = await FormModel.create({
       userId: payload.user_id,

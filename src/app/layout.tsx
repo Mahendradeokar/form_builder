@@ -22,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
-        {/* <Nudge /> */}
+        <Nudge />
         {children}
-        {/* <Toaster /> */}
+        <Toaster />
       </body>
     </html>
   );

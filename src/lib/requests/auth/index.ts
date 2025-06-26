@@ -6,6 +6,7 @@ import { toast } from "@/components/ui/use-toast";
 
 export const login = async (data: { email: string; password: string }) => {
   try {
+    debugger;
     const { data: resData } = await API.post<BaseResponse>("login", data);
     const rc = successHandler(resData, { showNotification: false });
     return rc;
