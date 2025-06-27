@@ -62,7 +62,11 @@ function CreateForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button
+          loading={form.formState.isSubmitting}
+          type="submit"
+          className="w-full"
+        >
           Create
         </Button>
       </form>

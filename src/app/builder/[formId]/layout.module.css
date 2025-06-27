@@ -1,7 +1,0 @@
-@tailwind components;
-
-@layer components {
-  .sidebarLayout {
-    @apply flex gap-3 grow-[1] shrink-[1] basis-[100%];
-  }
-}

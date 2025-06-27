@@ -18,6 +18,23 @@ import { loadForm } from "@/lib/services/form/formSlice";
 import { IFormState } from "@/types";
 import Loader from "@/components/ui/Loader";
 import { useAppDispatch } from "@/lib/hook";
+import { cn } from "@/lib/utils";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
+type CanvasAside = React.PropsWithChildren<React.HTMLAttributes<HTMLElement>>;
+
+const CanvasAside: React.FC<CanvasAside> = ({ children, className }) => {
+  return (
+    <aside
+      className={cn(
+        "hidden xl:block max-h-full overflow-hidden overflow-y-auto p-4",
+        className
+      )}
+    >
+      {children}
+    </aside>
+  );
+};
 
 export default function Builder() {
   const [loading, setLoading] = useState(true);
@@ -46,21 +63,25 @@ export default function Builder() {
     <>
       <DndProvider backend={HTML5Backend}>
         {!isPreview && (
-          <aside className={styles.sidebar}>
+          <CanvasAside>
             <ComponentHolder />
-          </aside>
+          </CanvasAside>
         )}
-        <main className={styles.mainContent}>
+        <ScrollArea
+          type="always"
+          className="bg-secondary flex justify-center max-h-full"
+        >
           <Droppable className="w-full flex place-content-center">
             {loading ? <Loader /> : <Canvas preview={Boolean(isPreview)} />}
           </Droppable>
-        </main>
+          <ScrollBar />
+        </ScrollArea>
       </DndProvider>
       {!isPreview && (
-        <aside className={styles.sidebar}>
+        <CanvasAside>
           <ComponentConfiguration />
-        </aside>
+        </CanvasAside>
       )}
-  </>
+    </>
   );
 }

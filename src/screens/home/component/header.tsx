@@ -5,23 +5,11 @@ import Link from "next/link";
 
 export default function HomePageHeader() {
   return (
-    <header className="p-3 flex flex-wrap justify-between">
-      <Link href={"/"}>
-        <h1 className="text-xl font-bold">Form Builder</h1>
-      </Link>
-      <div className="flex justify-end flex-wrap gap-4 px-5">
-        <div className="flex items-center gap-1">
-          {/* <Link href="/signup">
-            <Button size={"lg"}>SignUp</Button>
-          </Link>
-          <Link href="/login">
-            <Button size={"lg"}>Login</Button>
-          </Link> */}
-          <Link href="/builder/add">
-            <Button size={"lg"}>Create Form</Button>
-          </Link>
-        </div>
-      </div>
+    <header className="flex items-center justify-between w-full max-w-screen-xl mx-auto p-2 sm:p-2 lg:p-4">
+      <span className="text-base font-semibold">Form Builder</span>
+      <Button size={"lg"}>
+        <Link href="/builder/add">Create Form</Link>
+      </Button>
     </header>
   );
 }

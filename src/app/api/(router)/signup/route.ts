@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       );
     }
     const { username, email, password } = reqBody;
-    
+
     const userData = await UserModel.findOne({ email }).lean();
     if (userData) {
       return NextResponse.json(

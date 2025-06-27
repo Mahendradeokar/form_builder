@@ -10,16 +10,14 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html>
-      <body className="h-screen grid place-content-center">
-        <div className="grid justify-center gap-3 w-[20rem]">
-          <h2 className="text-xl">Something went wrong!</h2>
-          <p className="text-center">{error.message}</p>
-          <Button size={"lg"} onClick={() => reset()}>
-            Try again
-          </Button>
-        </div>
-      </body>
-    </html>
+    <div className="h-screen grid place-content-center">
+      <div className="grid justify-center gap-3 w-[20rem]">
+        <h2 className="text-xl">Something went wrong!</h2>
+        <p className="text-center">{error.message}</p>
+        <Button size={"lg"} onClick={() => reset()}>
+          Try again
+        </Button>
+      </div>
+    </div>
   );
 }

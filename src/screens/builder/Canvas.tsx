@@ -198,7 +198,7 @@ export default function Canvas({ preview }: Props) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submit)} className="space-y-2">
           {arrayFields.map(({ _id }, idx: number) => {
-            const { properties, type, validations } = controlConfig[idx];
+            const { properties, type, validations } = controlConfig?.[idx];
             return (
               <ElementHandler
                 preview={preview}

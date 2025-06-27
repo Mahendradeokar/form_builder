@@ -11,7 +11,7 @@ import { getDefaultProps } from "./controllersProperties";
 import { getDefaultValidations } from "@/screens/builder/services/validations";
 
 const initialState: IFormState = {
-  name: "Edit Title",
+  name: "",
   description: "Edit Description",
   controlConfig: [],
 };

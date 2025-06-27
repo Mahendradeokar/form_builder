@@ -1,18 +1,33 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import CreateForm from "@/screens/CreateForm/component/CreateForm";
+import GoBack from "@/components/GoBack";
 
 export default function Form() {
   return (
-    <div className="grid justify-center items-center h-screen">
-      <div className="shadow-md p-5 rounded-sm w-full max-w-[35rem] border h-fit">
-        <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Create an new Form
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Enter form name below to create your a new Form
-          </p>
-        </div>
-        <CreateForm />
+    <div className="flex flex-col h-screen p-8">
+      <div>
+        <GoBack className="mb-4" label="Back" />
+      </div>
+      <div className="flex-1 flex justify-center items-center">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold tracking-tight">
+              Create an new Form
+            </CardTitle>
+            <CardDescription className="text-sm text-muted-foreground">
+              Enter form name below to create your a new Form
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CreateForm />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
